@@ -1,0 +1,7 @@
+#Config file
+config.php
+
+#Cache
+[Cc]ache/
+
+*~
