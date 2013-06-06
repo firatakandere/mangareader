@@ -46,8 +46,6 @@ function set_config($config_name, $config_value)
     
     $config[$config_name] = $config_value;
     $cache->remove_end('config');
-
-    $db->errorInfo();
 }
 
 /**
@@ -86,4 +84,57 @@ function reader_is_writable($path)
     
     return true;
 }
+
+/**
+* Generate fingerprint for user browser
+*
+* @return string hashed fingerprint
+*/
+function get_browser_fingerprint()
+{
+    global $config;
+    $data = '';
+    $data .= getip();
+    $data .= $_SERVER['HTTP_USER_AGENT'];
+    $data .= $_SERVER['HTTP_ACCEPT'];
+    $data .= $config['board_salt'];
+    $data .= $_SERVER['HTTP_ACCEPT_CHARSET'];
+    $data .= $_SERVER['HTTP_ACCEPT_ENCODING'];
+    $data .= $_SERVER['HTTP_ACCEPT_LANGUAGE'];
+    
+    return hash('sha256', $data);
+}
+
+/**
+* Ger user ip
+*
+* @return string User IP
+*/
+function get_ip()
+{
+    $table = array(
+                'HTTP_CLIENT_IP',
+                'HTTP_X_FORWARDED_FOR',
+                'HTTP_X_FORWARDED',
+                'HTTP_X_CLUSTER_CLIENT_IP',
+                'HTTP_FORWARDED_FOR',
+                'HTTP_FORWARDED',
+                'REMOTE_ADDR'
+    );
+    
+    foreach ($table as $key)
+    {
+        if (array_key_exists($key, $_SERVER) === true)
+        {
+            foreach (explode(',', $_SERVER[$key]) as $ip)
+            {
+                if (filter_var($ip, FILTER_VALIDATE_IP) !== false)
+                {
+                    return $ip;
+                }
+            }
+        }
+    }
+}
+
 ?>

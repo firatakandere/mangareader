@@ -70,7 +70,7 @@ function remove_action($where, $callback)
     $hooking_daemon->remove_action($where, $callback);
 }
 
-function execute_action($where, $args = array())
+function do_action($where, $args = array())
 {
     global $hooking_daemon;
     $hooking_daemon->execute($where, $args = array());

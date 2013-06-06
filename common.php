@@ -23,6 +23,9 @@ require($mangareader_root_path . 'config.php');
 require($mangareader_root_path . 'includes/constants.php');
 require($mangareader_root_path . 'includes/class-database.php');
 require($mangareader_root_path . 'includes/class-cache.php');
+require($mangareader_root_path . 'includes/class-template.php');
+require($mangareader_root_path . 'includes/class-user.php');
+require($mangareader_root_path . 'includes/class-hooks.php');
 
 // If the database port is not empty, suffix it to the database host with ':' seperator
 if (!empty($dbport))
@@ -60,5 +63,9 @@ if (($config = $cache->get('config')) === false)
     }
     $cache->put('config', $config);
 }
+
+$user = new User();
+$template = new Template();
+$template->set_template();
 
 ?>
