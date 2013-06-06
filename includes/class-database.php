@@ -89,7 +89,7 @@ class Database extends PDO
         {
             foreach ($assoc_ary as $key => $var)
             {
-                $values = "$key = " . $this->_validate_data($var);
+                $values[] = "$key = " . $this->_validate_data($var);
             }
             
             $query = implode(($mode == 'UPDATE') ? ', ' : ' AND ', $values);

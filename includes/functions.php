@@ -29,20 +29,25 @@ function set_config($config_name, $config_value)
     {
         return;
     }
-    
+        
     $data_ary = array('config_value' => $config_value);
     
-    $sql = 'UPDATE ' . CONFIG_TABLE . ' SET ' . $db->build_array('UPDATE', $data_ary) . "
-    WHERE config_name = '" . $db->quote($config_name) . "'";
+    $sql = 'UPDATE ' . CONFIG_TABLE . '
+            SET ' . $db->build_array('UPDATE', $data_ary) . '
+            WHERE config_name = ' . $db->quote($config_name);
     
     // If not any column is affected, which means the config is missing, generate it
     if (!$db->exec($sql))
     {
+        $data_ary['config_name'] = $config_name;
         $sql = 'INSERT INTO ' . CONFIG_TABLE . ' ' .$db->build_array('INSERT', $data_ary);
         $db->exec($sql);
     }
     
+    $config[$config_name] = $config_value;
     $cache->remove_end('config');
+
+    $db->errorInfo();
 }
 
 /**
@@ -67,7 +72,7 @@ function reader_is_writable($path)
     
     // Check tmp file for read/write capabilities
     $rm = file_exists($path);
-    $f = @fopen($file, 'a');
+    $f = @fopen($path, 'a');
     if ($f === false)
     {
         return false;
@@ -76,10 +81,9 @@ function reader_is_writable($path)
     
     if (!$rm)
     {
-        unlink($rm);
+        @unlink($path);
     }
     
     return true;
 }
-
 ?>

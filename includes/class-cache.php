@@ -23,7 +23,7 @@ if (!defined('IN_MANGAREADER'))
 */
 class Cache
 {
-    var $cache_dir = '';
+    var $cache_dir;
     var $not_writable = false;
     var $remove_at_the_end = array();
     
@@ -32,14 +32,11 @@ class Cache
         global $mangareader_root_path;
         
         $this->cache_dir = $mangareader_root_path . 'cache/';
-        
-        if (reader_is_writable($this->cache_dir))
+        if (!reader_is_writable($this->cache_dir))
         {
             $this->not_writable = true;
             
-            /**
-            * @todo Give a system warning
-            */
+            trigger_error('Cache directory is not writable', E_USER_WARNING);
         }
     }
     
@@ -64,10 +61,10 @@ class Cache
         }
         
         $file_data = '<' . '?php exit; ?' . '>';
-        $file_data .= var_export($data, true);
+        $file_data .= serialize($data);
         
-        $result = file_put_contents($filename, $file_data, LOCK_EX);
-        
+        $result = file_put_contents($this->_get_file_path($filename), $file_data, LOCK_EX);
+        @chmod($this->_get_file_path($filename), 0777);
         return ($result !== false);
     }
     
@@ -83,14 +80,26 @@ class Cache
             return false;
         }
         
-        return include($this->_get_file_path($filename));
+        return unserialize(str_replace('<' . '?php exit; ?' . '>', '', file_get_contents($this->_get_file_path($filename))));
     }
     
+    /**
+    * Get the full path of a specified filename
+    *
+    * @param string $filename Filename without extension
+    * @return string Full path of file
+    */
     function _get_file_path($filename)
     {
         return $this->cache_dir . $filename . '.php';
     }
     
+    /**
+    * Remove a specified cache entry
+    *
+    * @param string $filename Filename without extension
+    * @return boolean Either ture if everything is okay, or false if something is wrong
+    */
     function remove($filename)
     {
         if ($this->not_writable)
@@ -101,6 +110,11 @@ class Cache
         return @unlink($this->_get_file_path($filename));
     }
     
+    /**
+    * Delete all cache entries
+    *
+    * @return boolean Either true if everything is okay, or false if something is wrong
+    */
     function flush()
     {
         if ($this->not_writable)
@@ -122,6 +136,11 @@ class Cache
         return $result;
     }
     
+    /**
+    * Remove the cache file at the end of the system
+    * @param string $filename Filename without extension
+    * @return void
+    */
     function remove_end($filename)
     {
         if (!in_array($filename, $this->remove_at_the_end))
@@ -130,6 +149,5 @@ class Cache
         }
     }
 }
-
 
 ?>
