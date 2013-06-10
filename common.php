@@ -26,6 +26,7 @@ require($mangareader_root_path . 'includes/class-cache.php');
 require($mangareader_root_path . 'includes/class-template.php');
 require($mangareader_root_path . 'includes/class-user.php');
 require($mangareader_root_path . 'includes/class-hooks.php');
+require($mangareader_root_path . 'includes/plugin.php');
 
 // If the database port is not empty, suffix it to the database host with ':' seperator
 if (!empty($dbport))

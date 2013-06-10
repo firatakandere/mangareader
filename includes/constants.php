@@ -17,8 +17,11 @@ if (!defined('IN_MANGAREADER'))
     exit;
 }
 
+define('ANONYMOUS', 0);
+
 define('CONFIG_TABLE', $dbprefix . 'config');
 define('MANGA_TABLE', $dbprefix . 'manga');
 define('CATEGORY_TABLE', $dbprefix . 'category');
+define('USER_TABLE', $dbprefix . 'user');
 
 ?>

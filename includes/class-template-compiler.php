@@ -1,7 +1,7 @@
 <?php
 /**
 *
-* @package hooks
+* @package template
 * @version $Id$
 * @copyright Copyright (c) 2013, Firat Akandere
 * @author Firat Akandere <f.akandere@gmail.com>

@@ -19,6 +19,10 @@ if (!defined('IN_MANGAREADER'))
 
 /**
 * Set config, generate missing ones
+*
+* @param string $config_name Unique config name
+* @param string $config_value Value for the config
+* @return void
 */
 function set_config($config_name, $config_value)
 {

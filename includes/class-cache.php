@@ -48,6 +48,13 @@ class Cache
         }
     }
     
+    /**
+    * Store data in cache
+    *
+    * @param string $filename Filename without extension
+    * @param mixed $data Cached data
+    * @return boolean Either true if everything is okay, or false if something is wrong
+    */
     function put($filename, $data)
     {
         if ($this->not_writable)
@@ -64,10 +71,16 @@ class Cache
         $file_data .= serialize($data);
         
         $result = file_put_contents($this->_get_file_path($filename), $file_data, LOCK_EX);
-        @chmod($this->_get_file_path($filename), 0777);
+        chmod($this->_get_file_path($filename), 0666);
         return ($result !== false);
     }
     
+    /**
+    * Get stored data from cache
+    *
+    * @param string $filename Filename without extension
+    * @return false Either true if the data is fetched from cache or false if the file does not exist
+    */
     function get($filename)
     {
         if ($this->not_writable)
@@ -98,7 +111,7 @@ class Cache
     * Remove a specified cache entry
     *
     * @param string $filename Filename without extension
-    * @return boolean Either ture if everything is okay, or false if something is wrong
+    * @return boolean Either true if everything is okay, or false if something is wrong
     */
     function remove($filename)
     {
@@ -106,8 +119,8 @@ class Cache
         {
             return false;
         }
-        
-        return @unlink($this->_get_file_path($filename));
+
+        return unlink($this->_get_file_path($filename));
     }
     
     /**

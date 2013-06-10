@@ -57,6 +57,7 @@ class Hooks
 }
 
 $hooking_daemon = new Hooks();
+$admin_pages = array();
 
 function add_action($where, $callback, $priority = 50)
 {

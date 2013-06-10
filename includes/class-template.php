@@ -1,7 +1,7 @@
 <?php
 /**
 *
-* @package hooks
+* @package template
 * @version $Id$
 * @copyright Copyright (c) 2013, Firat Akandere
 * @author Firat Akandere <f.akandere@gmail.com>
@@ -59,6 +59,28 @@ class template
 		{
 			trigger_error('Template path could not be found: templates/' . $user->theme['template_path'], E_USER_ERROR);
 		}
+
+		$this->_rootref = &$this->_tpldata['.'][0];
+
+		return true;
+	}
+    
+	/**
+	* Set custom template location (able to use directory outside of phpBB)
+	* @access public
+	*/
+	function set_custom_template($template_path, $template_name)
+	{
+		global $mangareader_root_path;
+
+		// Make sure $template_path has no ending slash
+		if (substr($template_path, -1) == '/')
+		{
+			$template_path = substr($template_path, 0, -1);
+		}
+
+		$this->root = $template_path;
+		$this->cachepath = $mangareader_root_path_path . 'cache/ctpl_' . str_replace('_', '-', $template_name) . '_';
 
 		$this->_rootref = &$this->_tpldata['.'][0];
 

@@ -3,7 +3,9 @@
 class User
 {
     
-    public $data = array();
+    var $data = array();
+    var $lang = array();
+    var $lang_name = '';
     
     function __construct()
     {
@@ -13,9 +15,15 @@ class User
         {
             session_start();
         }
-        $this->data['template_path'] = $config['default_template'];
+        
+        // Defaults
+        $this->data = array(
+            'user_id'       => ANONYMOUS,
+            'template_path' => $config['default_template'],
+            'language_path'      => 'en_US',
+        );
     }
-    
+
 
 }
 
