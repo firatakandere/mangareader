@@ -17,6 +17,25 @@ if (!defined('IN_MANGAREADER'))
     exit;
 }
 
+if (!file_exists($mangareader_root_path . 'config.php'))
+{
+    if (!headers_sent())
+    {
+        header('Location: ./install/');
+    }
+    else
+    {
+        die('Configuration file does not exist. Please go installation path to install mangareader');
+    }
+}
+
+if (file_exists($mangareader_root_path . 'install') && !defined('IN_INSTALL'))
+{
+    /**
+    * @todo install path still exists error
+    */
+}
+
 require($mangareader_root_path . 'includes/startup.php');
 require($mangareader_root_path . 'includes/functions.php');
 require($mangareader_root_path . 'config.php');

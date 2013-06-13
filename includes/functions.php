@@ -141,4 +141,33 @@ function get_ip()
     }
 }
 
+/**
+* Generate page header
+*/
+function page_header($page_title = '')
+{
+    global $config;
+
+    if ($config['gzip_compress'])
+    {
+        if (@extension_loaded('zlib') && !headers_sent() && ob_get_level() <= 1 && ob_get_length() == 0)
+        {
+            ob_start('ob_gzhandler');
+        }
+    }
+
+    $template->assign_vars(array(
+        'TITLE'     => $page_title
+    ));
+
+    // application/xhtml+xml not used because of IE
+    header('Content-type: text/html; charset=UTF-8');
+
+    header('Cache-Control: private, no-cache="set-cookie"');
+    header('Expires: 0');
+    header('Pragma: no-cache');
+
+    return;
+}
+
 ?>

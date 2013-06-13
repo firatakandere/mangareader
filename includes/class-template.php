@@ -66,7 +66,7 @@ class template
 	}
     
 	/**
-	* Set custom template location (able to use directory outside of phpBB)
+	* Set custom template location (able to use directory outside)
 	* @access public
 	*/
 	function set_custom_template($template_path, $template_name)
@@ -80,7 +80,7 @@ class template
 		}
 
 		$this->root = $template_path;
-		$this->cachepath = $mangareader_root_path_path . 'cache/ctpl_' . str_replace('_', '-', $template_name) . '_';
+		$this->cachepath = $mangareader_root_path . 'cache/ctpl_' . str_replace('_', '-', $template_name) . '_';
 
 		$this->_rootref = &$this->_tpldata['.'][0];
 

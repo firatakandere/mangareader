@@ -2,6 +2,6 @@
 config.php
 
 #Cache
-[Cc]ache/
+[Cc]ache/*.php
 
 *~
