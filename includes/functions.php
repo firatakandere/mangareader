@@ -18,6 +18,124 @@ if (!defined('IN_MANGAREADER'))
 }
 
 /**
+* set_var
+*
+* Set variable, used by {@link request_var the request_var function}
+*
+* @access private
+*/
+function set_var(&$result, $var, $type, $multibyte = false)
+{
+    settype($var, $type);
+    $result = $var;
+
+    if ($type == 'string')
+    {
+        $result = trim(htmlspecialchars(str_replace(array("\r\n", "\r", "\0"), array("\n", "\n", ''), $result), ENT_COMPAT, 'UTF-8'));
+
+        if (!empty($result))
+        {
+            // Make sure multibyte characters are wellformed
+            if ($multibyte)
+            {
+                if (!preg_match('/^./u', $result))
+                {
+                    $result = '';
+                }
+            }
+            else
+            {
+                // no multibyte, allow only ASCII (0-127)
+                $result = preg_replace('/[\x80-\xFF]/', '?', $result);
+            }
+        }
+
+	$result = (STRIP) ? stripslashes($result) : $result;
+    }
+}
+
+/**
+* request_var
+*
+* Used to get passed variable
+*/
+function request_var($var_name, $default, $multibyte = false, $cookie = false)
+{
+    if (!$cookie && isset($_COOKIE[$var_name]))
+    {
+        if (!isset($_GET[$var_name]) && !isset($_POST[$var_name]))
+        {
+        	return (is_array($default)) ? array() : $default;
+		}
+		$_REQUEST[$var_name] = isset($_POST[$var_name]) ? $_POST[$var_name] : $_GET[$var_name];
+	}
+
+	$super_global = ($cookie) ? '_COOKIE' : '_REQUEST';
+	if (!isset($GLOBALS[$super_global][$var_name]) || is_array($GLOBALS[$super_global][$var_name]) != is_array($default))
+	{
+		return (is_array($default)) ? array() : $default;
+	}
+
+	$var = $GLOBALS[$super_global][$var_name];
+	if (!is_array($default))
+	{
+		$type = gettype($default);
+	}
+	else
+	{
+		list($key_type, $type) = each($default);
+		$type = gettype($type);
+		$key_type = gettype($key_type);
+		if ($type == 'array')
+		{
+			reset($default);
+			$default = current($default);
+			list($sub_key_type, $sub_type) = each($default);
+			$sub_type = gettype($sub_type);
+			$sub_type = ($sub_type == 'array') ? 'NULL' : $sub_type;
+			$sub_key_type = gettype($sub_key_type);
+		}
+	}
+
+	if (is_array($var))
+	{
+		$_var = $var;
+		$var = array();
+
+		foreach ($_var as $k => $v)
+		{
+			set_var($k, $k, $key_type);
+			if ($type == 'array' && is_array($v))
+			{
+				foreach ($v as $_k => $_v)
+				{
+					if (is_array($_v))
+					{
+						$_v = null;
+					}
+					set_var($_k, $_k, $sub_key_type, $multibyte);
+					set_var($var[$k][$_k], $_v, $sub_type, $multibyte);
+				}
+			}
+			else
+			{
+				if ($type == 'array' || is_array($v))
+				{
+					$v = null;
+				}
+				set_var($var[$k], $v, $type, $multibyte);
+			}
+		}
+	}
+	else
+	{
+		set_var($var, $var, $type, $multibyte);
+	}
+
+	return $var;
+}
+
+/**
 * Set config, generate missing ones
 *
 * @param string $config_name Unique config name
@@ -62,31 +180,49 @@ function set_config($config_name, $config_value)
 */
 function reader_is_writable($path)
 {
-    // Recursively return a temporary file path
-    if (substr($path, -1) == '/')
+    if (strtolower(substr(PHP_OS, 0, 3)) == 'win' || !function_exists('is_writable'))
     {
-        return reader_is_writable($path . uniqid(mt_rand()) . '.tmp');
-    }
-    else if (is_dir($path))
+        if (file_exists($path))
+        {
+            if (is_dir($path))
+            {
+                // Try creating a new file in directory
+                $result = @tempnam($path, 'i_w');
+
+                if (is_string($result) && file_exists($result))
+                {
+                    unlink($result);
+                    // Ensure the file is actually in the directory
+					return (strpos($result, $path) === 0) ? true : false;
+                }
+            }
+            else
+            {
+				$handle = @fopen($path, 'r+');
+
+				if (is_resource($handle))
+				{
+					fclose($handle);
+					return true;
+				}
+			}
+        }
+		else
+		{
+			// file does not exist test if we can write to the directory
+			$dir = dirname($path);
+
+			if (file_exists($dir) && is_dir($dir) && reader_is_writable($dir))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+    else
     {
-        return reader_is_writable($path. '/' . uniqid(mt_rand()) . '.tmp');
+        return is_writable($path);
     }
-    
-    // Check tmp file for read/write capabilities
-    $rm = file_exists($path);
-    $f = @fopen($path, 'a');
-    if ($f === false)
-    {
-        return false;
-    }
-    @fclose($f);
-    
-    if (!$rm)
-    {
-        @unlink($path);
-    }
-    
-    return true;
 }
 
 /**
@@ -117,13 +253,13 @@ function get_browser_fingerprint()
 function get_ip()
 {
     $table = array(
-                'HTTP_CLIENT_IP',
-                'HTTP_X_FORWARDED_FOR',
-                'HTTP_X_FORWARDED',
-                'HTTP_X_CLUSTER_CLIENT_IP',
-                'HTTP_FORWARDED_FOR',
-                'HTTP_FORWARDED',
-                'REMOTE_ADDR'
+        'HTTP_CLIENT_IP',
+        'HTTP_X_FORWARDED_FOR',
+        'HTTP_X_FORWARDED',
+        'HTTP_X_CLUSTER_CLIENT_IP',
+        'HTTP_FORWARDED_FOR',
+        'HTTP_FORWARDED',
+        'REMOTE_ADDR'
     );
     
     foreach ($table as $key)
@@ -169,5 +305,20 @@ function page_header($page_title = '')
 
     return;
 }
+
+function page_footer()
+{
+    global $template;
+
+    $template->display('body');
+    exit_handler();
+}
+
+function exit_handler()
+{
+    (ob_get_level() > 0) ? @ob_flush() : @flush();
+    exit;
+}
+
 
 ?>

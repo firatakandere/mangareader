@@ -8,7 +8,6 @@ MangaReader is a free high-level manga reading board written in PHP.
 - User Management System
 - Multi-database support (with PDO)
 - Adult content filter
-- 
 
 ## REQUIREMENTS
 - PHP5

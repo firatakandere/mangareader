@@ -94,6 +94,12 @@ function remove_menu_page($menu_slug)
     return true;
 }
 
+/**
+* Remove a submenu page from admin panel
+*
+* @param string $menu_slug Slug name of the submenu ite
+* @return boolean Either false if the menu item does not exist or true if it's removed
+*/
 function remove_submenu_page($menu_slug, $submenu_slug)
 {
     global $admin_pages;
@@ -104,6 +110,35 @@ function remove_submenu_page($menu_slug, $submenu_slug)
     }
     
     unset($admin_pages[$menu_slug]['subpages'][$submenu_slug]);
+}
+
+function get_plugin_header_line($title, $content)
+{
+    if (is_empty($content))
+    {
+        return false;
+    }
+    preg_match('/^\s*' . $title . '\s*:\s*(.*)$/i', $input_line, $matches);
+    if (sizeof($matches))
+    {
+        return $matches[1];
+    }
+    else
+    {
+        return false;
+    }
+}
+
+function get_plugin_header($file_path)
+{
+    if (!file_exists($file_path))
+    {
+        if (defined('DEBUG'))
+        {
+            trigger_error("get_plugin_header: File for $file_path does not exist.");
+        }
+        return false;
+    }
 }
 
 ?>

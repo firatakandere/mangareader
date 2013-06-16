@@ -19,8 +19,8 @@ require($mangareader_root_path . 'common.php');
 $mangareader_admin_root_path = (defined('MANGAREADER_ADMIN_ROOT_PATH')) ? MANGAREADER_ADMIN_ROOT_PATH : './';
 
 $template->set_custom_template($mangareader_admin_root_path . 'style/', 'admin');
-
 $template->set_filenames(array('body' => 'general_body.html'));
 
-$template->display('body');
+page_footer();
+
 ?>
