@@ -17,4 +17,4 @@ NOTE: The project is still in development and does not work at the moment. I wil
 
 
 ## LICENSE
-[GNU General Public License v2](http://opensource.org/licenses/GPL-3.0)
+[GNU General Public License v3](http://opensource.org/licenses/GPL-3.0)
