@@ -1,5 +1,6 @@
 ## ABOUT
 MangaReader is a free high-level manga reading board written in PHP.
+
 NOTE: The project is still in development and does not work at the moment. I will make a master branch when it's done. Also, I'm looking for a web designer who is good at HTML5 and CSS3
 
 ## FEATURES
