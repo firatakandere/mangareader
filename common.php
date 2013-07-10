@@ -17,7 +17,7 @@ if (!defined('IN_MANGAREADER'))
     exit;
 }
 
-if (!file_exists($mangareader_root_path . 'config.php'))
+if (!file_exists($mangareader_root_path . 'config.php') || filesize($mangareader_root_path . 'config.php') === 0)
 {
     if (!headers_sent())
     {

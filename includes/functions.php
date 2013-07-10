@@ -145,19 +145,19 @@ function request_var($var_name, $default, $multibyte = false, $cookie = false)
 function set_config($config_name, $config_value)
 {
     global $config, $cache, $db;
-    
+
     // If the config already exists and the value of it is still the same, do nothing
     if (isset($config[$config_name]) && $config[$config_name] == $config_value)
     {
         return;
     }
-        
+
     $data_ary = array('config_value' => $config_value);
-    
+
     $sql = 'UPDATE ' . CONFIG_TABLE . '
             SET ' . $db->build_array('UPDATE', $data_ary) . '
             WHERE config_name = ' . $db->quote($config_name);
-    
+
     // If not any column is affected, which means the config is missing, generate it
     if (!$db->exec($sql))
     {
@@ -165,7 +165,7 @@ function set_config($config_name, $config_value)
         $sql = 'INSERT INTO ' . CONFIG_TABLE . ' ' .$db->build_array('INSERT', $data_ary);
         $db->exec($sql);
     }
-    
+
     $config[$config_name] = $config_value;
     $cache->remove_end('config');
 }
@@ -174,7 +174,7 @@ function set_config($config_name, $config_value)
 * Check if path is writable
 *
 * This will work for both *nix and windows systems
-* 
+*
 * @param string $path Use trailing slash for folders!
 * @return boolean Either true if the path is writable or false if it is not
 */
@@ -193,32 +193,33 @@ function reader_is_writable($path)
                 {
                     unlink($result);
                     // Ensure the file is actually in the directory
-					return (strpos($result, $path) === 0) ? true : false;
+		    return (strpos($result, $path) === 0) ? true : false;
                 }
             }
             else
             {
-				$handle = @fopen($path, 'r+');
+		$handle = @fopen($path, 'r+');
 
-				if (is_resource($handle))
-				{
-					fclose($handle);
-					return true;
-				}
-			}
-        }
-		else
+		if (is_resource($handle))
 		{
-			// file does not exist test if we can write to the directory
-			$dir = dirname($path);
-
-			if (file_exists($dir) && is_dir($dir) && reader_is_writable($dir))
-			{
-				return true;
-			}
+		    fclose($handle);
+		    return true;
 		}
-		return false;
+	    }
+        }
+	else
+	{
+	    // file does not exist test if we can write to the directory
+	    $dir = dirname($path);
+
+	    if (file_exists($dir) && is_dir($dir) && reader_is_writable($dir))
+	    {
+		return true;
+	    }
 	}
+
+	return false;
+    }
     else
     {
         return is_writable($path);
@@ -241,7 +242,7 @@ function get_browser_fingerprint()
     $data .= $_SERVER['HTTP_ACCEPT_CHARSET'];
     $data .= $_SERVER['HTTP_ACCEPT_ENCODING'];
     $data .= $_SERVER['HTTP_ACCEPT_LANGUAGE'];
-    
+
     return hash('sha256', $data);
 }
 
@@ -261,7 +262,7 @@ function get_ip()
         'HTTP_FORWARDED',
         'REMOTE_ADDR'
     );
-    
+
     foreach ($table as $key)
     {
         if (array_key_exists($key, $_SERVER) === true)

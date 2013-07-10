@@ -24,16 +24,16 @@ if (!defined('IN_MANGAREADER'))
 class Hooks
 {
     private $hooks = array();
-    
+
     function add_action($where, $callback, $priority = 50)
     {
-        if (!isset($this->hooks[$where]))
+        if (!isset($this->hooks[$where]) || !is_array($this->hooks[$where]))
         {
             $this->hooks[$where] = array();
         }
         $this->hooks[$where][$callback] = $priority;
     }
-    
+
     function remove_action($where, $callback)
     {
         if (isset($this->hooks[$where][$callback]))
@@ -41,13 +41,13 @@ class Hooks
             unset($this->hooks[$where][$callback]);
         }
     }
-    
+
     function execute($where, $args = array())
     {
         if ((isset($this->hooks[$where])) && is_array($this->hooks[$where]))
         {
             arsort($this->hooks[$where]);
-            
+
             foreach ($this->hooks[$where] as $callback => $priority)
             {
                 call_user_func_array($callback, $args);
@@ -76,6 +76,5 @@ function do_action($where, $args = array())
     global $hooking_daemon;
     $hooking_daemon->execute($where, $args = array());
 }
-
 
 ?>

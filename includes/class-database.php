@@ -24,7 +24,7 @@ if (!defined('IN_MANGAREADER'))
 class Database extends PDO
 {
     private $transactions = 0;
-        
+
     function beginTransaction()
     {
         if (!$this->transactions)
@@ -32,10 +32,10 @@ class Database extends PDO
             $this->transactions++;
             return parent::beginTransaction();
         }
-        
+
         return false;
     }
-    
+
     function commit()
     {
         if ($this->transactions)
@@ -43,10 +43,10 @@ class Database extends PDO
             $this->transactions--;
             return parent::commit();
         }
-        
+
         return false;
     }
-    
+
     function rollBack()
     {
         if ($this->transactions >= 0)
@@ -54,11 +54,11 @@ class Database extends PDO
             $this->transactions = 0;
             return parent::rollBack();
         }
-        
+
         $this->transactions = 0;
         return false;
     }
-    
+
     /**
     * Build sql array
     *
@@ -72,9 +72,9 @@ class Database extends PDO
         {
             return false;
         }
-        
+
         $fields = $values = array();
-        
+
         if ($mode == 'INSERT')
         {
             foreach ($assoc_ary as $key => $var)
@@ -82,7 +82,7 @@ class Database extends PDO
                 $fields[] = $key;
                 $values[] = $this->_validate_data($var);
             }
-            
+
             $query = '(' . implode(', ', $fields) . ') VALUES (' . implode(', ', $values) . ')';
         }
         else if ($mode == 'UPDATE' || $mode == 'SELECT')
@@ -91,13 +91,13 @@ class Database extends PDO
             {
                 $values[] = "$key = " . $this->_validate_data($var);
             }
-            
+
             $query = implode(($mode == 'UPDATE') ? ', ' : ' AND ', $values);
         }
-        
+
         return $query;
     }
-    
+
     /**
     * Validate data for sql query
     */
@@ -117,6 +117,5 @@ class Database extends PDO
         }
     }
 }
-
 
 ?>

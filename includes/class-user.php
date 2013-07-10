@@ -1,31 +1,47 @@
 <?php
+/**
+*
+* @package hooks
+* @version $Id$
+* @copyright Copyright (c) 2013, Firat Akandere
+* @author Firat Akandere <f.akandere@gmail.com>
+* @license http://opensource.org/licenses/GPL-3.0 GNU Public License, version 3
+*
+*/
+
+/**
+* @ignore
+*/
+if (!defined('IN_MANGAREADER'))
+{
+    exit;
+}
 
 class User
 {
-    
     var $data = array();
     var $lang = array();
     var $lang_name = '';
     var $sid;
-    
+
     function __construct()
     {
         global $config, $db;
 
         // Let's kill expired sessions first
-        $expiration = (int) time() - ($config['session_span'] * 60);
+        $expiration = time() - ($config['session_span'] * 60);
         $sql = 'DELETE FROM ' . SESSION_TABLE . '
                 WHERE session_time < ' . (int)$expiration;
         $db->query($sql);
         //
-        
+
         if ((!isset($_SESSION) || !is_array($_SESSION)) && !headers_sent())
         {
             session_start();
         }
 
         $this->sid = session_id();
-        
+
         // Defaults
         $this->data = array(
             'user_id'       => ANONYMOUS,
