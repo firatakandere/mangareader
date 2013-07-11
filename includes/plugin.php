@@ -32,12 +32,12 @@ if (!defined('IN_MANGAREADER'))
 function add_menu_page($menu_title, $page_title, $capability, $menu_slug, $function = '', $position = null)
 {
     global $admin_pages;
-    
+
     if (isset($admin_pages[$menu_slug]) && defined('DEBUG'))
     {
         trigger_error("add_menu_page: Menu slug $menu_slug already exists, it will be overwritten.", E_USER_WARNING);
     }
-    
+
     $admin_pages[$menu_slug] = array(
         'menu_title'    => $menu_title,
         'page_title'    => $page_title,
@@ -48,10 +48,22 @@ function add_menu_page($menu_title, $page_title, $capability, $menu_slug, $funct
     );
 }
 
-function add_submenu_page($parent_slug, $page_title, $menu_title, $capability, $menu_slug, $function = '')
+/**
+* Add new sub page to an existing admin menu page
+*
+* @param string $parent_slug Slug name of parent page
+* @param string $menu_title Title for the menu
+* @param string $page_title Title for the page
+* @todo Add param here after capabilities have done
+* @param string $menu_slug Unique menu slug, do not use special characters
+* @param string $function The function name which will be called when the page is loaded
+* @param int $position Position of the menu item
+* @return void
+*/
+function add_submenu_page($parent_slug, $page_title, $menu_title, $capability, $menu_slug, $function = '', $position = null)
 {
     global $admin_pages;
-    
+
     if (!isset($admin_pages[$parent_slug]))
     {
         if (defined('DEBUG'))
@@ -60,18 +72,19 @@ function add_submenu_page($parent_slug, $page_title, $menu_title, $capability, $
         }
         return false;
     }
-    
+
     if (isset($admin_pages[$parent_slug]['subpages'][$menu_slug]) && defined('DEBUG'))
     {
         trigger_error("add_submenu_page: Menu slug $menu_slug already exists, it will be overwritten", E_USER_WARNING);
     }
-    
+
     $admin_pages[$parent_slug]['subpages'][$menu_slug] = array(
         'menu_title'    => $menu_title,
         'page_title'    => $page_title,
         'capability'    => $capability,
         'menu_slug'     => $menu_slug,
-        'function'      => $function
+        'function'      => $function,
+        'position'      => $position
     );
 }
 
@@ -84,12 +97,12 @@ function add_submenu_page($parent_slug, $page_title, $menu_title, $capability, $
 function remove_menu_page($menu_slug)
 {
     global $admin_pages;
-    
+
     if (!isset($admin_pages[$menu_slug]))
     {
         return false;
     }
-    
+
     unset($admin_pages[$menu_slug]);
     return true;
 }
@@ -103,12 +116,12 @@ function remove_menu_page($menu_slug)
 function remove_submenu_page($menu_slug, $submenu_slug)
 {
     global $admin_pages;
-    
+
     if (!isset($admin_pages[$menu_slug]['subpages'][$submenu_slug]))
     {
         return false;
     }
-    
+
     unset($admin_pages[$menu_slug]['subpages'][$submenu_slug]);
 }
 

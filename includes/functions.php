@@ -184,6 +184,8 @@ function reader_is_writable($path)
     {
         if (file_exists($path))
         {
+	    $path = realpath($path);
+
             if (is_dir($path))
             {
                 // Try creating a new file in directory
