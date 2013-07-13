@@ -323,7 +323,7 @@ function exit_handler()
     exit;
 }
 
-function generate_url($suffix)
+function generate_url($suffix, $mod_rewrite_suffix = false)
 {
     global $config;
 
@@ -337,8 +337,15 @@ function generate_url($suffix)
 	$url .= 'http://';
     }
 
-    $url .= $config['domain'] . '/';
-    $url .= $suffix;
+    if ($mod_rewrite_suffix !== false && $config['mod_rewrite'] == 1)
+    {
+	$url .= $config['domain'] . '/' . $mod_rewrite_suffix;
+    }
+    else
+    {
+	$url .= $config['domain'] . '/' . $suffix;
+    }
+
     return $url;
 }
 

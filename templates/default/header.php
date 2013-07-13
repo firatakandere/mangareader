@@ -35,14 +35,14 @@
       <header class="top">
         <div class="head-top">
           <div class="pull-right">
-            <a href="#">Login</a> | <a href="#">Register</a>
+            <a href="<?php get_login_uri(); ?>">Login</a> | <a href="<?php get_register_uri(); ?>">Register</a>
           </div>
           <a href="#" class="logo">MangaReader</a>
         </div>
         <div class="navbar">
           <div class="navbar-inner">
             <div class="input-append pull-right search-top">
-              <input class="span2" id="appendedInputButton" type="text">
+              <input class="span2" id="appendedInputButton" type="text" placeholder="Search">
               <button class="btn btn-inverse" type="submit">Go!</button>
             </div>
             <ul class="nav">

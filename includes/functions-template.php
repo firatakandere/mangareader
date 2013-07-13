@@ -116,6 +116,30 @@ function get_template_directory_uri($return = false)
     echo $uri;
 }
 
+function get_login_uri($return = false)
+{
+    $url = generate_url('ucp.php?mode=login', 'user/login/');
+
+    if ($return)
+    {
+        return $url;
+    }
+
+    echo $url;
+}
+
+function get_register_uri($return = false)
+{
+    $url = generate_url('ucp.php?mode=register', 'user/register/');
+
+    if ($return)
+    {
+        return $url;
+    }
+
+    echo $url;
+}
+
 function language_attributes()
 {
     echo '';

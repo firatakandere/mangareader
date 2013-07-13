@@ -17,3 +17,7 @@ Deny from All
 Order Allow,Deny
 Deny from All
 </Files>
+
+RewriteEngine on
+RewriteRule ^user/(.*)/$ ucp.php?mode=$1 [NC,L]
+RewriteRule ^user/(.*)$ ucp.php?mode=$1 [NC,L]
