@@ -1,0 +1,43 @@
+html,
+body {
+    height: 100%;
+}
+
+body {
+    padding-top: 20px;
+}
+
+.container-narrow {
+    margin: 0 auto;
+    max-width: 960px;
+}
+
+.top {
+    padding: 0 0;
+}
+
+.logo {
+    font-size: 20px;
+}
+
+.head-top {
+    margin-bottom: 20px;
+}
+
+.search-top {
+    height: 30px;
+    margin-bottom: 0;
+    margin-top: 5px;
+}
+
+#wrapper {
+    min-height: 100%;
+    height: auto !important;
+    height: 100%;
+    margin: 0 auto -60px;
+}
+
+#push, footer
+{
+    height: 60px;
+}

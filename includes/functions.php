@@ -323,5 +323,23 @@ function exit_handler()
     exit;
 }
 
+function generate_url($suffix)
+{
+    global $config;
+
+    $url = '';
+    if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
+    {
+	$url .= 'https://';
+    }
+    else
+    {
+	$url .= 'http://';
+    }
+
+    $url .= $config['domain'] . '/';
+    $url .= $suffix;
+    return $url;
+}
 
 ?>
