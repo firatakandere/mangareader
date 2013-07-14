@@ -46,6 +46,7 @@ require($mangareader_root_path . 'includes/class-user.php');
 require($mangareader_root_path . 'includes/class-hooks.php');
 require($mangareader_root_path . 'includes/plugin.php');
 require($mangareader_root_path . 'includes/functions-template.php');
+require($mangareader_root_path . 'includes/utf/utf_tools.php');
 
 // If the database port is not empty, suffix it to the database host with ':' seperator
 if (!empty($dbport))

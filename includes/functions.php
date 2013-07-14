@@ -283,7 +283,7 @@ function get_ip()
 /**
 * Generate page header
 */
-function page_header($page_title = '')
+function page_header()
 {
     global $config;
 
@@ -294,10 +294,6 @@ function page_header($page_title = '')
             ob_start('ob_gzhandler');
         }
     }
-
-    $template->assign_vars(array(
-        'TITLE'     => $page_title
-    ));
 
     // application/xhtml+xml not used because of IE
     header('Content-type: text/html; charset=UTF-8');
@@ -347,6 +343,20 @@ function generate_url($suffix, $mod_rewrite_suffix = false)
     }
 
     return $url;
+}
+
+function redirect($url)
+{
+    if (headers_sent())
+    {
+	/**
+	* @todo give debug warning
+	*/
+    }
+    else
+    {
+	header("Location: $url");
+    }
 }
 
 ?>
