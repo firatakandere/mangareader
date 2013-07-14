@@ -97,7 +97,7 @@ function validate_string($string, $optional = false, $min = 0, $max = 0)
 *
 * @return boolean|string Either false if the validation succeeded or a string which will be used as the error message (with the variable name appended)
 */
-function validate_number($number, $optional = false, $min = 0, $max = 0)
+function validate_num($number, $optional = false, $min = 0, $max = 0)
 {
     if (empty($num) && $optional)
     {
@@ -140,6 +140,88 @@ function validate_match($string, $optional = false, $match = '')
     }
 
     return false;
+}
+
+/**
+* Validate Date
+*
+* @return boolean|string Either false if the validation succeeded or a string which will be used as the error message (with the variable name appended)
+*/
+function validate_date($string, $optional = false)
+{
+    $date = explode('-', $string);
+    if ((empty($date) || sizeof($date) != 3) && $optional)
+    {
+	return false;
+    }
+    else if ($optional)
+    {
+	for ($field = 0; $field <= 1; $field++)
+	{
+	    $date[$field] = (int) $date[$field];
+	    if (empty($date[$field]))
+	    {
+		$date[$field] = 1;
+	    }
+	}
+	$date[2] = (int) $date[2];
+
+	// assume an arbitrary leap year
+	if (empty($date[2]))
+	{
+	    $date[2] = 1980;
+	}
+    }
+
+    if (sizeof($date) != 3 || !checkdate($date[1], $date[0], $date[2]))
+    {
+	return 'INVALID';
+    }
+
+    return false;
+}
+
+/**
+* Validate username
+*
+* @todo Make this function better
+* @return boolean|string Either false if the validation succeeded or a string which will be used as the error message (with the variable name appended)
+*/
+function validate_username($username)
+{
+    global $db;
+
+    $clean_username = utf8_clean_string($username);
+
+    // ... fast checks first.
+    if (strpos($username, '&quot;') !== false || strpos($username, '"') !== false || empty($clean_username))
+    {
+	return 'INVALID_CHARS';
+    }
+
+    $sql = 'SELECT username
+	    FROM ' . USERS_TABLE . '
+	    WHERE username_clean = ' . $db->quote($clean_username);
+    $row = $sql->query($sql);
+
+    if ($row)
+    {
+	return 'USERNAME_TAKEN';
+    }
+
+    return false;
+}
+
+/**
+* Validate Email
+*
+* @return boolean|string Either false if the validation succeeded or a string which will be used as the error message (with the variable name appended)
+*/
+function validate_email($email)
+{
+    $email = strtolower($email);
+
+    
 }
 
 ?>

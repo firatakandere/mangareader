@@ -17,5 +17,4 @@ $mangareader_root_path = (defined('MANGAREADER_ROOT_PATH')) ? MANGAREADER_ROOT_P
 include($mangareader_root_path . 'common.php');
 
 locate_template('index.php', true);
-
 ?>

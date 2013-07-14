@@ -5,7 +5,7 @@
     <div class="control-group">
         <label class="control-label" for="inputUsername">Username</label>
         <div class="controls">
-            <input type="text" id="inputUsername" name="username" placeholder="Username">
+            <input type="text" id="inputUsername" name="username" placeholder="Username" value="<?php echo $data['username']; ?>">
         </div>
     </div>
     <div class="control-group">
@@ -23,7 +23,7 @@
     <div class="control-group">
         <label class="control-label" for="inputEmail">Email Address</label>
         <div class="controls">
-            <input type="email" id="inputEmail" name="email" placeholder="Email Address">
+            <input type="email" id="inputEmail" name="email" placeholder="Email Address" value="<?php echo $data['email']; ?>">
         </div>
     </div>
     <div class="control-group">

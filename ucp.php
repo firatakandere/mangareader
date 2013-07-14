@@ -39,15 +39,34 @@ switch ($mode)
             redirect(generate_url('index.php', ''));
         }
 
+        $timezone = $config['board_timezone'];
+
+        $data = array(
+            'username'          => utf8_normalize_nfc(request_var('username', '', true)),
+            'password'          => request_var('password', '', true),
+            'password_confirm'  => request_var('password_confirm', '', true),
+            'email'             => request_var('email', ''),
+            'email_confirm'     => request_var('email_confirm', ''),
+            'tz'                => request_var('tz', (float) $timezone),
+        );
+
         if ($submit)
         {
-            $data = array(
-                'username'          => utf8_normalize_nfc(request_var('username', '', true)),
-                'password'          => request_var('password', '', true),
-                'password_confirm'  => request_var('password_confirm', '', true),
-                'email'             => request_var('email', ''),
-                'email_confirm'     => request_var('email_confirm', ''),
-            );
+            $error = validate_data($data, array(
+                'username'  => array(
+                    array('string', false, $config['min_username_chars'], $config['max_username_chars']),
+                    array('username', ''),
+                ),
+                'password'  => array(
+                    array('string', false, $config['min_password_chars'], $config['max_password_chars']),
+                    //array('password')
+                ),
+                'email'     => array(
+                    array('string', false, 6, 60),
+                    array('email')
+                ),
+                'tz'    => array('num', -14, 14)
+            ));
         }
 
         locate_template('user_register.php', true);
