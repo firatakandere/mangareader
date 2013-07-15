@@ -27,7 +27,7 @@ switch ($mode)
     break;
 
     case 'register':
-        if ($config['register_open'] != 1)
+        if (!$config['register_open'])
         {
             /**
             * @todo make here better

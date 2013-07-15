@@ -11,6 +11,20 @@ $lang = array(
     'PASSWORD_CONFIRM'  => 'Password (Confirm)',
     'REGISTER'  => 'Register',
 
+// registration errors
+    'TOO_SHORT_USERNAME'    => 'Username is too short',
+    'TOO_LONG_USERNAME'     => 'Username is too long',
+    'INVALID_CHARS_USERNAME'=> 'Username includes invalid characters',
+    'TOO_SHORT_PASSWORD'    => 'Password is too short',
+    'TOO_LONG_PASSWORD'     => 'Password is too long',
+    'TOO_SHORT_PASSWORD_CONFIRM'    => 'Confirmation password is too short',
+    'TOO_LONG_PASSWORD_CONFIRM'     => 'Confirmation password is too long',
+    'TOO_SHORT_EMAIL'       => 'Email address is too short',
+    'TOO_LONG_EMAIL'        => 'Email address is too long',
+    'EMAIL_INVALID_EMAIL'   => 'Email address is not valid',
+    'TOO_SHORT_EMAIL_CONFIRM'       => 'Confirmation email address is too short',
+    'TOO_LONG_EMAIL_CONFIRM'        => 'Confirmation email address is too long',
+
 
 // search section
     'SEARCH'    => 'Search',

@@ -83,7 +83,7 @@ function load_template($_template_file, $require_once = true)
     /**
     * @todo Lots of global variables come here
     */
-    global $cache, $config, $data, $user;
+    global $cache, $config, $data, $error, $user;
 
     if ($require_once)
     {

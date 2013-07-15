@@ -27,7 +27,7 @@ class User
         global $config, $db;
 
         // Let's kill expired sessions first
-        $expiration = time() - ($config['session_span'] * 60);
+        $expiration = time() - ((int) $config['session_span'] * 60);
         $sql = 'DELETE FROM ' . SESSION_TABLE . '
                 WHERE session_time < ' . (int)$expiration;
         $db->query($sql);

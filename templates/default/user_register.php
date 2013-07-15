@@ -1,4 +1,19 @@
 <?php get_header(); ?>
+<?php
+if (sizeof($error)) :
+?>
+<div class="alert alert-error">
+<?php
+foreach ($error as $err) :
+?>
+<p><?php _e($err); ?></p>
+<?php
+endforeach;
+?>
+</div>
+<?php
+endif;
+?>
 <form class="form-horizontal" method="post" action="<?php get_register_uri(); ?>">
     <fieldset>
         <legend><?php _e('REGISTER'); ?></legend>

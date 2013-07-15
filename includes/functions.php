@@ -356,7 +356,6 @@ function redirect($url)
     }
 }
 
-
 function __($text, $domain = 'default')
 {
     global $lang_domains;
@@ -383,7 +382,7 @@ function load_langdomain($directory_path, $domain)
     {
 	return false;
     }
-    if (!is_array($lang_domains))
+    if (!isset($lang_domains) || !is_array($lang_domains))
     {
 	$lang_domains = array();
     }
@@ -424,11 +423,14 @@ function load_langdomain($directory_path, $domain)
 	include($directory_path . '/' . $config['default_langauge'] . '.php');
 	$lang_domains[$domain] = $lang;
     }
-    else if (defined('DEBUG'))
+    else
     {
-	/**
-	* @todo language could not be initialized error
-	*/
+	if (defined('DEBUG'))
+	{
+	    /**
+	    * @todo language could not be initialized error
+	    */
+	}
 
 	return false;
     }

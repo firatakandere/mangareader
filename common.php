@@ -86,6 +86,8 @@ if (($config = $cache->get('config')) === false)
 }
 
 $user = new User();
+
 $lang_domains = array();
 load_langdomain($mangareader_root_path . 'languages', 'default');
+
 ?>

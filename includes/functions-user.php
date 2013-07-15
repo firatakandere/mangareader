@@ -59,7 +59,7 @@ function validate_data($data, $val_ary)
 
 	    if ($result = call_user_func_array('validate_' . $function, $validate))
 	    {
-		$error[] = (empty($user->lang[$result . '_' . strtoupper($var)])) ? $result : $result . '_' . strtoupper($var);
+		$error[] = $result . '_' . strtoupper($var);
 	    }
 	}
     }
@@ -202,7 +202,7 @@ function validate_username($username)
     $sql = 'SELECT username
 	    FROM ' . USERS_TABLE . '
 	    WHERE username_clean = ' . $db->quote($clean_username);
-    $row = $sql->query($sql);
+    $row = $db->query($sql)->fetch();
 
     if ($row)
     {
@@ -249,7 +249,7 @@ function validate_email($email)
 	$sql = 'SELECT user_email_hash
 		FROM ' . USERS_TABLE . '
 		WHERE user_email_hash = ' . $db->quote(mangareader_email_hash($email));
-	$row = $db->query($sql);
+	$row = $db->query($sql)->fetch();
 	if ($row)
 	{
 	    return 'EMAIL_TAKEN';
