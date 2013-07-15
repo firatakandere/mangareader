@@ -1,40 +1,40 @@
 <?php get_header(); ?>
 <form class="form-horizontal" method="post" action="<?php get_register_uri(); ?>">
     <fieldset>
-        <legend>Register</legend>
+        <legend><?php _e('REGISTER'); ?></legend>
     <div class="control-group">
-        <label class="control-label" for="inputUsername">Username</label>
+        <label class="control-label" for="inputUsername"><?php _e('USERNAME'); ?></label>
         <div class="controls">
-            <input type="text" id="inputUsername" name="username" placeholder="Username" value="<?php echo $data['username']; ?>">
+            <input type="text" id="inputUsername" name="username" placeholder="<?php _e('USERNAME'); ?>" value="<?php echo $data['username']; ?>">
         </div>
     </div>
     <div class="control-group">
-        <label class="control-label" for="inputPassword">Password</label>
+        <label class="control-label" for="inputPassword"><?php _e('PASSWORD'); ?></label>
         <div class="controls">
-            <input type="password" id="inputPassword" name="password" placeholder="Password">
+            <input type="password" id="inputPassword" name="password" placeholder="<?php _e('PASSWORD'); ?>">
         </div>
     </div>
     <div class="control-group">
-        <label class="control-label" for="inputPasswordConfirm">Password (Confirm)</label>
+        <label class="control-label" for="inputPasswordConfirm"><?php _e('PASSWORD_CONFIRM'); ?></label>
         <div class="controls">
-            <input type="password" id="inputPasswordConfirm" name="password_confirm" placeholder="Password (Confirm)">
+            <input type="password" id="inputPasswordConfirm" name="password_confirm" placeholder="<?php _e('PASSWORD_CONFIRM'); ?>">
         </div>
     </div>
     <div class="control-group">
-        <label class="control-label" for="inputEmail">Email Address</label>
+        <label class="control-label" for="inputEmail"><?php _e('EMAIL_ADDRESS'); ?></label>
         <div class="controls">
-            <input type="email" id="inputEmail" name="email" placeholder="Email Address" value="<?php echo $data['email']; ?>">
+            <input type="email" id="inputEmail" name="email" placeholder="<?php _e('EMAIL_ADDRESS'); ?>" value="<?php echo $data['email']; ?>">
         </div>
     </div>
     <div class="control-group">
-        <label class="control-label" for="inputEmailConfirm">Email Address (Confirm)</label>
+        <label class="control-label" for="inputEmailConfirm"><?php _e('EMAIL_ADDRESS_CONFIRM'); ?></label>
         <div class="controls">
-            <input type="email" id="inputEmailConfirm" name="email_confirm" placeholder="Email Address (Confirm)">
+            <input type="email" id="inputEmailConfirm" name="email_confirm" placeholder="<?php _e('EMAIL_ADDRESS_CONFIRM'); ?>">
         </div>
     </div>
     <div class="control-group">
         <div class="controls">
-            <button type="submit" class="btn" name="submit">Register</button>
+            <button type="submit" class="btn" name="submit"><?php _e('REGISTER'); ?></button>
         </div>
     </div>
     </fieldset>

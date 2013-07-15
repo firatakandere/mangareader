@@ -221,7 +221,40 @@ function validate_email($email)
 {
     $email = strtolower($email);
 
-    
+    // Regex written by James Watts and Francisco Jose Martin Moreno
+    // http://fightingforalostcause.net/misc/2006/compare-email-regex.php
+    $email_regex = '([\w\!\#$\%\&\'\*\+\-\/\=\?\^\`{\|\}\~]+\.)*(?:[\w\!\#$\%\'\*\+\-\/\=\?\^\`{\|\}\~]|&amp;)+@((((([a-z0-9]{1}[a-z0-9\-]{0,62}[a-z0-9]{1})|[a-z])\.)+[a-z]{2,63})|(\d{1,3}\.){3}\d{1,3}(\:\d{1,5})?)';
+
+    if (!preg_match('/^' . $email_regex . '$/i', $email))
+    {
+	return 'EMAIL_INVALID';
+    }
+
+    // Check MX record.
+    // The idea for this is from reading the UseBB blog/announcement. :)
+    if ($config['email_check_mx'])
+    {
+	list(, $domain) = explode('@', $email);
+
+	if (checkdnsrr($domain, 'A') === false && checkdnsrr($domain, 'MX') === false)
+	{
+	    return 'DOMAIN_NO_MX_RECORD';
+	}
+    }
+
+    if (!$config['allow_emailreuse'])
+    {
+	global $db;
+
+	$sql = 'SELECT user_email_hash
+		FROM ' . USERS_TABLE . '
+		WHERE user_email_hash = ' . $db->quote(mangareader_email_hash($email));
+	$row = $db->query($sql);
+	if ($row)
+	{
+	    return 'EMAIL_TAKEN';
+	}
+    }
 }
 
 ?>

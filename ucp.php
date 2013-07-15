@@ -61,12 +61,27 @@ switch ($mode)
                     array('string', false, $config['min_password_chars'], $config['max_password_chars']),
                     //array('password')
                 ),
+                'password_confirm' => array('string', false, $config['min_password_chars'], $config['max_password_chars']),
                 'email'     => array(
                     array('string', false, 6, 60),
                     array('email')
                 ),
+                'email_confirm' => array('string', false, 6, 60),
                 'tz'    => array('num', -14, 14)
             ));
+
+            if (!sizeof($error))
+            {
+                if ($data['password'] != $data['password_confirm'])
+                {
+                    $error[] = $user->lang['PASSWORD_MATCH_ERROR'];
+                }
+
+                if ($data['email'] != $data['email_confirm'])
+                {
+                    $error[] = $user->lang['EMAIL_MATCH_ERROR'];
+                }
+            }
         }
 
         locate_template('user_register.php', true);

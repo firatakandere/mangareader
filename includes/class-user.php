@@ -20,8 +20,6 @@ if (!defined('IN_MANGAREADER'))
 class User
 {
     var $data = array();
-    var $lang = array();
-    var $lang_name = '';
     var $sid;
 
     function __construct()
@@ -46,7 +44,7 @@ class User
         $this->data = array(
             'user_id'       => ANONYMOUS,
             'template_path' => $config['default_template'],
-            'language_path'      => 'en_US',
+            'language_name'      => 'en_US',
         );
 
         if (isset($_COOKIE[$config['session_key']]) && !isset($_SESSION[$config['session_key']]))

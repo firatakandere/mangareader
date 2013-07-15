@@ -307,9 +307,6 @@ function page_header()
 
 function page_footer()
 {
-    global $template;
-
-    $template->display('body');
     exit_handler();
 }
 
@@ -357,5 +354,85 @@ function redirect($url)
     {
 	header("Location: $url");
     }
+}
+
+
+function __($text, $domain = 'default')
+{
+    global $lang_domains;
+
+    if (isset($lang_domains[$domain][$text]))
+    {
+	return $lang_domains[$domain][$text];
+    }
+    else
+    {
+	return '{' . $text . '}';
+    }
+}
+
+function _e($text, $domain = 'default')
+{
+    echo __($text, $domain);
+}
+
+function load_langdomain($directory_path, $domain)
+{
+    global $config, $lang_domains, $user;
+    if (empty($domain))
+    {
+	return false;
+    }
+    if (!is_array($lang_domains))
+    {
+	$lang_domains = array();
+    }
+
+    if (isset($lang_domains[$domain]))
+    {
+	if (defined('DEBUG'))
+	{
+	    /**
+	    * @todo Domain already initialized, will be overwritten error
+	    */
+	}
+	unset($lang_domains[$domain]);
+    }
+
+    if (substr($directory_path, -1) == '/')
+    {
+	$directory_path = substr($directory_path, 0, -1);
+    }
+
+    if (file_exists($directory_path . '/' . $user->data['language_name'] . '.php'))
+    {
+	unset($lang);
+	include($directory_path . '/' . $user->data['language_name'] . '.php');
+	$lang_domains[$domain] = $lang;
+    }
+    // Let's try english :3
+    else if (file_exists($directory_path . '/en_US.php'))
+    {
+	unset($lang);
+	include($directory_path . '/en_US.php');
+	$lang_domains[$domain] = $lang;
+    }
+    // Also try board's default language
+    else if (file_exists($directory_path . '/' . $config['default_langauge'] . '.php'))
+    {
+	unset($lang);
+	include($directory_path . '/' . $config['default_langauge'] . '.php');
+	$lang_domains[$domain] = $lang;
+    }
+    else if (defined('DEBUG'))
+    {
+	/**
+	* @todo language could not be initialized error
+	*/
+
+	return false;
+    }
+
+    return true;
 }
 ?>

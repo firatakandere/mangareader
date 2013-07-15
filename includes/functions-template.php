@@ -18,10 +18,12 @@ function get_footer($name = null)
     {
         locate_template('footer.php', true);
     }
+    page_footer();
 }
 
 function get_header($name = null)
 {
+    page_header();
     if (isset($name))
     {
         locate_template("header-{$name}.php", true);
@@ -114,6 +116,17 @@ function get_template_directory_uri($return = false)
         return $uri;
     }
     echo $uri;
+}
+
+function get_home_uri($return = false)
+{
+    $url = generate_url('', '');
+
+    if ($return)
+    {
+        return $url;
+    }
+    echo $url;
 }
 
 function get_login_uri($return = false)

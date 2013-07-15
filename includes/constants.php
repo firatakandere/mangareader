@@ -22,6 +22,6 @@ define('ANONYMOUS', 0);
 define('CONFIG_TABLE', $dbprefix . 'config');
 define('MANGA_TABLE', $dbprefix . 'manga');
 define('CATEGORY_TABLE', $dbprefix . 'category');
-define('USER_TABLE', $dbprefix . 'user');
+define('USERS_TABLE', $dbprefix . 'users');
 
 ?>
