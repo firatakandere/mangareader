@@ -95,6 +95,34 @@ function load_template($_template_file, $require_once = true)
     }
 }
 
+function get_timezonelist($selected_value = '', $return = false, $atts = array())
+{
+    $attributes = '';
+    if (sizeof($atts))
+    {
+        foreach ($atts as $key => $value)
+        {
+            $attributes .= ' ' . $key . '="' . $value . '"';
+        }
+    }
+    $output = '<select' . $attributes . ' name="tz">';
+    $timezones = __('timezones');
+
+    foreach ($timezones as $value => $timezone)
+    {
+        $selected = ($selected_value == $value) ? ' selected="selected"' : '';
+        $output .= '<option title="' . $timezone . '" value="' . $value . '"' . $selected . '>' . $timezone . '</option>';
+    }
+    $output .= '</select>';
+
+    if ($return)
+    {
+        return $output;
+    }
+
+    echo $output;
+}
+
 function get_charset($return = false)
 {
     /**

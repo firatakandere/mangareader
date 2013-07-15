@@ -48,6 +48,12 @@ endif;
         </div>
     </div>
     <div class="control-group">
+        <label class="control-label" for="inputTimezone"><?php _e('TIMEZONE'); ?></label>
+        <div class="controls">
+            <?php get_timezonelist($config['board_timezone'], false, array('id' => 'inputTimezone')); ?>
+        </div>
+    </div>
+    <div class="control-group">
         <div class="controls">
             <button type="submit" class="btn" name="submit"><?php _e('REGISTER'); ?></button>
         </div>
