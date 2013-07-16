@@ -74,12 +74,37 @@ switch ($mode)
             {
                 if ($data['password'] != $data['password_confirm'])
                 {
-                    $error[] = $user->lang['PASSWORD_MATCH_ERROR'];
+                    $error[] = 'PASSWORD_MATCH_ERROR';
                 }
 
                 if ($data['email'] != $data['email_confirm'])
                 {
-                    $error[] = $user->lang['EMAIL_MATCH_ERROR'];
+                    $error[] = 'EMAIL_MATCH_ERROR';
+                }
+            }
+
+            if (!sizeof($error))
+            {
+                if ($config['activation_required'] == USER_ACTIVATION_SELF || $config['activation_required'] == USER_ACTIVATION_ADMIN)
+                {
+                    $data['group_id'] = INACTIVE_USERS;
+                }
+                else
+                {
+                    $data['group_id'] = REGISTERED_USERS;
+                }
+
+                if (user_add($data) !== false)
+                {
+                    /**
+                    * @todo registration ok
+                    */
+                }
+                else
+                {
+                    /**
+                    * @todo registration failed
+                    */
                 }
             }
         }

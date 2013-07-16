@@ -19,9 +19,26 @@ if (!defined('IN_MANGAREADER'))
 
 define('ANONYMOUS', 0);
 
+
+// User activation types
+define('NO_ACTIVATION', 0);
+define('USER_ACTIVATION_SELF', 1);
+define('USER_ACTIVATION_ADMIN', 2);
+
+// Group IDs
+define('INACTIVE_USERS', 1);
+define('REGISTERED_USERS', 2);
+define('MODERATORS', 3);
+define('ADMINISTRATORS', 4);
+
 define('CONFIG_TABLE', $dbprefix . 'config');
 define('MANGA_TABLE', $dbprefix . 'manga');
 define('CATEGORY_TABLE', $dbprefix . 'category');
+define('GROUPS_TABLE', $dbprefix . 'groups');
 define('USERS_TABLE', $dbprefix . 'users');
+
+//ACL Tables
+define('GROUP_PERM_TABLE', $dbprefix . 'group_perm');
+define('PERMISSIONS_TABLE', $dbprefix . 'permissions');
 
 ?>

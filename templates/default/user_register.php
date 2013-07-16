@@ -44,7 +44,7 @@ endif;
     <div class="control-group">
         <label class="control-label" for="inputEmailConfirm"><?php _e('EMAIL_ADDRESS_CONFIRM'); ?></label>
         <div class="controls">
-            <input type="email" id="inputEmailConfirm" name="email_confirm" placeholder="<?php _e('EMAIL_ADDRESS_CONFIRM'); ?>">
+            <input type="email" id="inputEmailConfirm" name="email_confirm" placeholder="<?php _e('EMAIL_ADDRESS_CONFIRM'); ?>" value="<?php echo $data['email_confirm']; ?>">
         </div>
     </div>
     <div class="control-group">

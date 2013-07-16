@@ -24,6 +24,10 @@ $lang = array(
     'EMAIL_INVALID_EMAIL'   => 'Email address is not valid',
     'TOO_SHORT_EMAIL_CONFIRM'       => 'Confirmation email address is too short',
     'TOO_LONG_EMAIL_CONFIRM'        => 'Confirmation email address is too long',
+    'PASSWORD_MATCH_ERROR'  => 'Passwords do not match',
+    'EMAIL_MATCH_ERROR'     => 'Email addresses do not match',
+    'TOO_SMALL_TZ'          => 'Timezone value is too small',
+    'TOO_LARGE_TZ'          => 'Timezone value is too large',
 
 
 // search section

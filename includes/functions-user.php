@@ -257,4 +257,47 @@ function validate_email($email)
     }
 }
 
+function user_add($user_row)
+{
+    global $db;
+
+    if (empty($user_row['username']) || empty($user_row['user_email']) || empty($user_row['password']) || empty($user_row['group_id']))
+    {
+	return false;
+    }
+
+    $username_clean = utf8_clean_string($user_row['username']);
+
+    if (empty($username_clean))
+    {
+	return false;
+    }
+
+    $sql_ary = array(
+	'username'	=> $user_row['username'],
+	'username_clean'=> $username_clean,
+	'user_password'	=> hash_password($user_row['password']),
+	'user_email'	=> strtolower($user_row['email']),
+	'user_email_hash'=> mangareader_email_hash($user_row['email']),
+	'user_ip'	=> get_ip(),
+	'user_regdate'	=> time(),
+	'user_timezone'	=> $user_row['tz'],
+    );
+
+    $sql = 'INSERT INTO ' . USERS_TABLE . ' ' . $db->build_array('INSERT', $sql_ary);
+
+    if (!$db->query($sql))
+    {
+	/**
+	* @todo registration error
+	*/
+	return false;
+    }
+
+    /**
+    * @todo registration ok message
+    */
+    return $db->lastInsertId();
+}
+
 ?>
