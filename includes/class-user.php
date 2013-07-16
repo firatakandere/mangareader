@@ -99,6 +99,7 @@ class User
     {
         global $config, $db;
         unset($_SESSION[$config['session_key']]);
+        setcookie($config['session_key'], '', time() - 3600, '/'); 
         $this->kill_session();
         $this->load_defaults();
         if (!empty($redirect) && !headers_sent())
