@@ -261,7 +261,7 @@ function user_add($user_row)
 {
     global $db;
 
-    if (empty($user_row['username']) || empty($user_row['user_email']) || empty($user_row['password']) || empty($user_row['group_id']))
+    if (empty($user_row['username']) || empty($user_row['email']) || empty($user_row['password']) || empty($user_row['group_id']))
     {
 	return false;
     }
@@ -275,6 +275,7 @@ function user_add($user_row)
 
     $sql_ary = array(
 	'username'	=> $user_row['username'],
+	'group_id'	=> $user_row['group_id'],
 	'username_clean'=> $username_clean,
 	'user_password'	=> hash_password($user_row['password']),
 	'user_email'	=> strtolower($user_row['email']),

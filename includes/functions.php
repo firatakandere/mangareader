@@ -237,7 +237,7 @@ function get_browser_fingerprint()
 {
     global $config;
     $data = '';
-    $data .= getip();
+    $data .= get_ip();
     $data .= $_SERVER['HTTP_USER_AGENT'];
     $data .= $_SERVER['HTTP_ACCEPT'];
     $data .= $config['board_salt'];
@@ -307,6 +307,8 @@ function page_header()
 
 function page_footer()
 {
+    global $db;
+    print_r($db->errorInfo());
     exit_handler();
 }
 

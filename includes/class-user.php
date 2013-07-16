@@ -1,7 +1,7 @@
 <?php
 /**
 *
-* @package hooks
+* @package reader
 * @version $Id$
 * @copyright Copyright (c) 2013, Firat Akandere
 * @author Firat Akandere <f.akandere@gmail.com>
@@ -22,14 +22,14 @@ class User
     var $data = array();
     var $sid;
 
-    function __construct()
+    public function __construct()
     {
         global $config, $db;
 
         // Let's kill expired sessions first
         $expiration = time() - ((int) $config['session_span'] * 60);
-        $sql = 'DELETE FROM ' . SESSION_TABLE . '
-                WHERE session_time < ' . (int)$expiration;
+        $sql = 'DELETE FROM ' . SESSIONS_TABLE . '
+                WHERE session_last_visit < ' . (int)$expiration;
         $db->query($sql);
         //
 
@@ -41,11 +41,37 @@ class User
         $this->sid = session_id();
 
         // Defaults
-        $this->data = array(
-            'user_id'       => ANONYMOUS,
-            'template_path' => $config['default_template'],
-            'language_name'      => 'en_US',
-        );
+        $this->load_defaults();
+
+        // Check if session id already exists on database
+        $sql = 'SELECT session_user_id, session_fingerprint
+                FROM ' . SESSIONS_TABLE . '
+                WHERE session_id = ' . $db->quote($this->sid);
+        $row = $db->query($sql)->fetch();
+        if (!empty($row))
+        {
+            // Check fingerprint
+            if ($row['session_fingerprint'] != get_browser_fingerprint())
+            {
+                $this->logout();
+                if ($row['session_user_id'] == ANONYMOUS)
+                {
+                    $this->add_session();
+                }
+            }
+            else
+            {
+                // Update session last visit time
+                $sql = 'UPDATE ' . SESSIONS_TABLE . '
+                        SET session_last_visit = ' . time() . '
+                        WHERE session_id = ' . $db->quote($this->sid);
+                $db->query($sql);
+            }
+        }
+        else
+        {
+            $this->add_session();
+        }
 
         if (isset($_COOKIE[$config['session_key']]) && !isset($_SESSION[$config['session_key']]))
         {
@@ -69,18 +95,27 @@ class User
         }
     }
 
-    function logout($redirect = '')
+    public function logout($redirect = '')
     {
-        global $config;
+        global $config, $db;
         unset($_SESSION[$config['session_key']]);
-        setcookie($config['session_key'], '', time() - 3600, '/');
+        $this->kill_session();
+        $this->load_defaults();
         if (!empty($redirect) && !headers_sent())
         {
             header("Location: $redirect");
         }
     }
 
-    function login($username = '', $password = '', $auto_login = false)
+    public function kill_session()
+    {
+        global $db;
+        setcookie($config['session_key'], '', time() - 3600, '/');
+        $sql = 'DELETE FROM ' . SESSIONS_TABLE . ' WHERE session_id = ' . $db->quote($this->sid);
+        $db->query($sql);
+    }
+
+    public function login($username = '', $password = '', $auto_login = false)
     {
         global $config;
         if ($this->load($username, $password))
@@ -102,7 +137,7 @@ class User
         return false;
     }
 
-    function load($username = '', $password = '')
+    private function load($username = '', $password = '')
     {
         if (empty($username))
         {
@@ -112,7 +147,7 @@ class User
         global $db;
 
         $sql = 'SELECT *
-                FROM ' . USER_TABLE . '
+                FROM ' . USERS_TABLE . '
                 WHERE username = ' . $db->quote($username);
         $result = $db->query($sql);
 
@@ -134,10 +169,45 @@ class User
             return false;
         }
 
-        unset($row['hash_password']);
+        unset($row['user_password']);
         $this->data = $row;
 
+        // Session should already exists in database
+        $sql = 'UPDATE ' . SESSIONS_TABLE . '
+                SET session_user_id = ' . $this->data['user_id'] . '
+                WHERE session_id = ' . $db->quote($this->sid);
+        $db->query($sql);
+
         return true;
+    }
+
+    private function add_session()
+    {
+        global $db;
+        $sql_ary = array(
+            'session_id'        => $this->sid,
+            'session_user_id'   => $this->data['user_id'],
+            'session_last_visit'=> time(),
+            'session_start'     => time(),
+            'session_fingerprint'=> get_browser_fingerprint()
+        );
+        $sql = 'INSERT INTO ' . SESSIONS_TABLE . ' ' . $db->build_array('INSERT', $sql_ary);
+        if ($db->query($sql) !== false)
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    private function load_defaults()
+    {
+        global $config;
+        $this->data = array(
+            'user_id'       => ANONYMOUS,
+            'template_path' => $config['default_template'],
+            'language_name'      => 'en_US',
+        );
     }
 }
 

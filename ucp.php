@@ -23,6 +23,31 @@ $submit = (isset($_POST['submit'])) ? true : false;
 switch ($mode)
 {
     case 'login':
+
+        if ($user->data['user_id'] != ANONYMOUS)
+        {
+            redirect(generate_url('', '')); //redirect to home page
+        }
+
+        $data['username'] = utf8_normalize_nfc(request_var('username', '', true));
+        $data['password'] = utf8_normalize_nfc(request_var('password', '', true));
+
+        if ($submit)
+        {
+            if ($user->login($data['username'], $data['password']))
+            {
+                /**
+                * @todo redirect index
+                */
+            }
+            else
+            {
+                /**
+                * @todo username/password invalid
+                */
+            }
+        }
+
         locate_template('user_login.php', true);
     break;
 
@@ -36,7 +61,7 @@ switch ($mode)
         }
         if (isset($_REQUEST['not_agreed']) || $user->data['user_id'] != ANONYMOUS)
         {
-            redirect(generate_url('index.php', ''));
+            redirect(generate_url('', '')); //redirect to home page
         }
 
         $timezone = $config['board_timezone'];
@@ -110,6 +135,10 @@ switch ($mode)
         }
 
         locate_template('user_register.php', true);
+    break;
+
+    case 'logout':
+        $user->logout(generate_url('', ''));
     break;
     default:
 

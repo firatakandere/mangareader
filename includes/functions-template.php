@@ -1,4 +1,13 @@
 <?php
+/**
+*
+* @package reader
+* @version $Id$
+* @copyright Copyright (c) 2013, Firat Akandere
+* @author Firat Akandere <f.akandere@gmail.com>
+* @license http://opensource.org/licenses/GPL-3.0 GNU Public License, version 3
+*
+*/
 
 /**
 * @ignore
@@ -43,6 +52,36 @@ function get_sidebar($name = null)
     else
     {
         locate_template('sidebar.php', true);
+    }
+}
+
+function is_logged_in()
+{
+    global $user;
+    return ($user->data['user_id'] != ANONYMOUS);
+}
+
+function get_user_data($data, $return = false)
+{
+    global $user;
+
+    if (!isset($user->data[$data]))
+    {
+        if ($return)
+        {
+            return false;
+        }
+
+        echo '{ NONE }';
+    }
+    else
+    {
+        if ($return)
+        {
+            return $user->data[$data];
+        }
+
+        echo $user->data[$data];
     }
 }
 
@@ -130,9 +169,10 @@ function get_charset($return = false)
     */
     if ($return)
     {
-        return 'UTF-8';
+        return __('CHARSET');
     }
-    echo 'UTF-8';
+
+    _e('CHARSET');
 }
 
 function get_template_directory_uri($return = false)
@@ -160,6 +200,18 @@ function get_home_uri($return = false)
 function get_login_uri($return = false)
 {
     $url = generate_url('ucp.php?mode=login', 'user/login/');
+
+    if ($return)
+    {
+        return $url;
+    }
+
+    echo $url;
+}
+
+function get_logout_uri($return = false)
+{
+    $url = generate_url('ucp.php?mode=logout', 'user/logout/');
 
     if ($return)
     {

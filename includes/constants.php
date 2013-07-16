@@ -17,7 +17,7 @@ if (!defined('IN_MANGAREADER'))
     exit;
 }
 
-define('ANONYMOUS', 0);
+define('ANONYMOUS', 1);
 
 
 // User activation types
@@ -28,14 +28,14 @@ define('USER_ACTIVATION_ADMIN', 2);
 // Group IDs
 define('INACTIVE_USERS', 1);
 define('REGISTERED_USERS', 2);
-define('MODERATORS', 3);
-define('ADMINISTRATORS', 4);
+define('GUESTS', 3);
 
 define('CONFIG_TABLE', $dbprefix . 'config');
 define('MANGA_TABLE', $dbprefix . 'manga');
 define('CATEGORY_TABLE', $dbprefix . 'category');
 define('GROUPS_TABLE', $dbprefix . 'groups');
 define('USERS_TABLE', $dbprefix . 'users');
+define('SESSIONS_TABLE', $dbprefix . 'sessions');
 
 //ACL Tables
 define('GROUP_PERM_TABLE', $dbprefix . 'group_perm');

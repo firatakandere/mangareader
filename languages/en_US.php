@@ -2,6 +2,9 @@
 
 $lang = array(
 
+// Template attributes
+    'CHARSET'   => 'UTF-8',
+
 // user management section
     'EMAIL_ADDRESS' => 'Email Address',
     'EMAIL_ADDRESS_CONFIRM' => 'Email Address (Confirm)',
@@ -10,6 +13,7 @@ $lang = array(
     'PASSWORD'  => 'Password',
     'PASSWORD_CONFIRM'  => 'Password (Confirm)',
     'REGISTER'  => 'Register',
+    'LOGOUT'    => 'Logout',
 
 // registration errors
     'TOO_SHORT_USERNAME'    => 'Username is too short',

@@ -35,7 +35,11 @@
       <header class="top">
         <div class="head-top">
           <div class="pull-right">
+            <?php if (is_logged_in()) : ?>
+            Logged in as <a href="#"><?php get_user_data('username'); ?></a> | <a href="<?php get_logout_uri(); ?>"><?php _e('LOGOUT'); ?></a>
+            <?php else : ?>
             <a href="<?php get_login_uri(); ?>"><?php _e('LOGIN'); ?></a> | <a href="<?php get_register_uri(); ?>"><?php _e('REGISTER'); ?></a>
+            <?php endif; ?>
           </div>
           <a href="<?php get_home_uri(); ?>" class="logo">MangaReader</a>
         </div>
