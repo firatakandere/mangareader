@@ -305,6 +305,9 @@ function page_header()
     return;
 }
 
+/**
+* Page footer
+*/
 function page_footer()
 {
     global $db;
@@ -318,6 +321,14 @@ function exit_handler()
     exit;
 }
 
+/**
+* Generate url
+*
+* @param string $suffix Suffix that will be appended to the website domain
+* @param string $mod_rewrite_suffix Permalink suffix
+*
+* @return string Generated url
+*/
 function generate_url($suffix, $mod_rewrite_suffix = false)
 {
     global $config;
@@ -355,6 +366,7 @@ function redirect($url)
     else
     {
 	header("Location: $url");
+	die();
     }
 }
 
@@ -439,4 +451,19 @@ function load_langdomain($directory_path, $domain)
 
     return true;
 }
+
+/**
+* Html meta refresh
+*
+* @param string $url Refresh url
+* @param int $delay Refresh delay
+*
+* @return void
+*/
+function meta_refresh($url, $delay = 3)
+{
+    $meta = '<meta http-equiv="refresh" content="' . $delay . ',url=' . $url . '">';
+    add_action('mr_head', create_function('', "echo '$meta';"));
+}
+
 ?>

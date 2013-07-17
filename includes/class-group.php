@@ -1,7 +1,7 @@
 <?php
 /**
 *
-* @package reader
+* @package acl
 * @version $Id$
 * @copyright Copyright (c) 2013, Firat Akandere
 * @author Firat Akandere <f.akandere@gmail.com>
@@ -19,17 +19,27 @@ if (!defined('IN_MANGAREADER'))
 
 /**
 * Acl-Group class
-* @package reader
+* @package acl
 */
 class Group
 {
     protected $permissions;
 
+    /**
+    * Constructor
+    */
     protected function __construct()
     {
         $this->permissions = array();
     }
 
+
+    /**
+    * Get Permissions By Group Id
+    *
+    * @param integer $group_id Group ID
+    * @return mixed Either new Group object if group id exists, otherwise false
+    */
     public static function getGroupPerms($group_id)
     {
         global $db;
@@ -57,8 +67,16 @@ class Group
         return $group;
     }
 
+    /**
+    * Check if permission exists
+    *
+    * @param string $permissions Permission name
+    * @return boolean Either true if permission exists, otherwise false
+    */
     public function hasPerm($permission)
     {
         return (isset($this->permissions[$permission]));
     }
 }
+
+?>

@@ -28,6 +28,7 @@
 <link rel="stylesheet" href="<?php get_template_directory_uri(); ?>/less/main.css">
 <script src="<?php get_template_directory_uri(); ?>/js/modernizr.js"></script>
 <?php mr_head(); ?>
+
 </head>
 
 <body>

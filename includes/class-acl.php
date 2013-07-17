@@ -1,7 +1,7 @@
 <?php
 /**
 *
-* @package reader
+* @package acl
 * @version $Id$
 * @copyright Copyright (c) 2013, Firat Akandere
 * @author Firat Akandere <f.akandere@gmail.com>
@@ -19,17 +19,26 @@ if (!defined('IN_MANGAREADER'))
 
 /**
 * Access control list
-* @package reader
+* @package acl
 */
 class Acl extends User
 {
     private $roles;
 
+    /**
+    * Constructor
+    */
     public function __construct()
     {
         parent::__construct();
     }
 
+    /**
+    * Permission checker
+    *
+    * @param string $perm Permission name
+    * @return boolean Either true if the user has permission, or false if the permission denied
+    */
     public function hasPrivilege($perm)
     {
         foreach ($this->roles as $role)
@@ -42,6 +51,12 @@ class Acl extends User
         return false;
     }
 
+    /**
+    * Get Privileges by username
+    *
+    * @param string $username Username
+    * @return mixed Either new Acl object if username exists, otherwise false
+    */
     public static function getByUsername($username)
     {
         global $db;
@@ -66,6 +81,9 @@ class Acl extends User
         return false;
     }
 
+    /**
+    * Initialize roles
+    */
     protected function initRoles()
     {
         global $db;

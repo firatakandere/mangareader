@@ -1,7 +1,7 @@
 <?php
 /**
 *
-* @package reader
+* @package acl
 * @version $Id$
 * @copyright Copyright (c) 2013, Firat Akandere
 * @author Firat Akandere <f.akandere@gmail.com>
@@ -17,11 +17,18 @@ if (!defined('IN_MANGAREADER'))
     exit;
 }
 
+/**
+* User Management Class
+* @package acl
+*/
 class User
 {
     var $data = array();
     var $sid;
 
+    /**
+    * Constructor
+    */
     public function __construct()
     {
         global $config, $db;
@@ -33,6 +40,7 @@ class User
         $db->query($sql);
         //
 
+        // Start session if has not started yet
         if ((!isset($_SESSION) || !is_array($_SESSION)) && !headers_sent())
         {
             session_start();
@@ -40,7 +48,7 @@ class User
 
         $this->sid = session_id();
 
-        // Defaults
+        // Load default user data
         $this->load_defaults();
 
         // Check if session id already exists on database
@@ -53,6 +61,7 @@ class User
             // Check fingerprint
             if ($row['session_fingerprint'] != get_browser_fingerprint())
             {
+                $this->kill_session();
                 $this->logout();
                 if ($row['session_user_id'] == ANONYMOUS)
                 {
@@ -99,12 +108,12 @@ class User
     {
         global $config, $db;
         unset($_SESSION[$config['session_key']]);
-        setcookie($config['session_key'], '', time() - 3600, '/'); 
+        setcookie($config['session_key'], '', time() - 3600, '/');
         $this->kill_session();
         $this->load_defaults();
-        if (!empty($redirect) && !headers_sent())
+        if (!empty($redirect))
         {
-            header("Location: $redirect");
+            redirect($redirect);
         }
     }
 
