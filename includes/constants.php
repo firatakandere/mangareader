@@ -38,6 +38,7 @@ define('USERS_TABLE', $dbprefix . 'users');
 define('SESSIONS_TABLE', $dbprefix . 'sessions');
 
 //ACL Tables
+define('USER_PERM_TABLE', $dbprefix . 'user_perm');
 define('GROUP_PERM_TABLE', $dbprefix . 'group_perm');
 define('PERMISSIONS_TABLE', $dbprefix . 'permissions');
 

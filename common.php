@@ -47,6 +47,7 @@ require($mangareader_root_path . 'includes/class-hooks.php');
 require($mangareader_root_path . 'includes/plugin.php');
 require($mangareader_root_path . 'includes/functions-template.php');
 require($mangareader_root_path . 'includes/utf/utf_tools.php');
+require($mangareader_root_path . 'includes/class-acl.php');
 
 // If the database port is not empty, suffix it to the database host with ':' seperator
 if (!empty($dbport))
@@ -86,6 +87,8 @@ if (($config = $cache->get('config')) === false)
 }
 
 $user = new User();
+$acl = new Acl();
+
 
 $lang_domains = array();
 load_langdomain($mangareader_root_path . 'languages', 'default');

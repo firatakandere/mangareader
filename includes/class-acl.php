@@ -19,11 +19,28 @@ if (!defined('IN_MANGAREADER'))
 
 /**
 * Access control list
+*
+* Every group has their own ACL
+* Also users' ACL can be changed specifically
+* When a permission is checked; user's own permission and user's group's permission will be compared
+* If user's permission says NO but user's group's permission says YES; comparison result will be YES, or vice-versa
+* If one of the permission is NEVER, comparison result will be NO
+*
+* There are three types of permissions,
+* Yes; which gives permission
+* No; which does not give permission
+* Never; which NEVER gives permission
+*
+* "Yes" will be stored as "1" (integer) in database
+* "No" will not be stored in database, if the row does not exist, the system will know it's "No"
+* "Never" will be stored as "0" (integer) in database
+*
 * @package acl
 */
 class Acl extends User
 {
-    private $roles;
+    private $group_permissions;
+    private $user_permissions;
 
     /**
     * Constructor
@@ -31,80 +48,64 @@ class Acl extends User
     public function __construct()
     {
         parent::__construct();
+        $this->init_group_permissions();
+        $this->init_user_permissions();
     }
 
-    /**
-    * Permission checker
-    *
-    * @param string $perm Permission name
-    * @return boolean Either true if the user has permission, or false if the permission denied
-    */
-    public function hasPrivilege($perm)
+    public function has_perm($perm_name)
     {
-        foreach ($this->roles as $role)
+        $group_p = (isset($this->group_permissions[$perm_name])) ? (int) $this->group_permissions[$perm_name] : false;
+        $user_p  = (isset($this->user_permissions[$perm_name])) ? (int) $this->user->permissions[$perm_name] : false;
+
+        // If one of them is 0 (never), return false
+        if ($group_p === 0 || $user_p === 0)
         {
-            if ($role->hasPerm($perm))
-            {
-                return true;
-            }
+            return false;
         }
+
+        // If one of them is 1 (yes), return true
+        if ($group_p === 1 || $user_p === 1)
+        {
+            return true;
+        }
+
+        // Otherwise, both of them are false (no), retun false
         return false;
     }
 
-    /**
-    * Get Privileges by username
-    *
-    * @param string $username Username
-    * @return mixed Either new Acl object if username exists, otherwise false
-    */
-    public static function getByUsername($username)
+    private function init_group_permissions()
     {
         global $db;
-        $username_clean = utf8_clean_string($username);
 
-        $sql = 'SELECT *
-                FROM ' . USERS_TABLE . '
-                WHERE username_clean = ' . $db->quote($username_clean);
+        $sql = 'SELECT perm_name, perm_type
+                FROM ' . PERMISSIONS_TABLE . ' AS t1
+                JOIN ' . GROUP_PERM_TABLE . ' AS t2
+                ON t1.perm_id = t2.perm_id
+                WHERE t2.group_id = ' . $this->data['group_id'];
         $sth = $db->prepare($sql);
         $sth->execute();
-        $result = $sth->fetchAll();
-
-        if (!empty($result))
-        {
-            $acl = new Acl();
-            unset($result[0]['user_password']);
-            $acl->data = $result[0];
-            $acl->initRoles();
-            return $acl;
-        }
-
-        return false;
-    }
-
-    /**
-    * Initialize roles
-    */
-    protected function initRoles()
-    {
-        global $db;
-        $this->roles = array();
-
-        $sql = 'SELECT t1.group_id
-                FROM ' . USERS_TABLE . ' AS t1
-                JOIN ' . GROUPS_TABLE . ' AS t2
-                ON t1.group_id = t2.group_id
-                WHERE t1.user_id = ' . $this->data['user_id'];
-        $sth = $db->prepare($sql);
-
-        if (!class_exists('Group'))
-        {
-            global $mangareader_root_path;
-            include_once($mangareader_root_path . 'includes/class.group.php');
-        }
 
         while ($row = $sth->fetch(PDO::FETCH_ASSOC))
         {
-            $this->roles[$row['group_name']] = Group::getGroupPerms($row['group_id']);
+            $this->group_permissions[$row['perm_name']] = $row['perm_type'];
+        }
+    }
+
+    private function init_user_permissions()
+    {
+        global $db;
+
+        $sql = 'SELECT perm_name, perm_type
+                FROM ' . PERMISSIONS_TABLE . ' AS t1
+                JOIN ' . USER_PERM_TABLE . ' AS t2
+                ON t1.perm_id = t2.perm_id
+                WHERE t2.user_id = ' . $this->data['user_id'];
+        $sth = $db->prepare($sql);
+        $sth->execute();
+
+        while ($row = $sth->fetch(PDO::FETCH_ASSOC))
+        {
+            $this->user_permissions[$row['perm_name']] = $row['perm_type'];
         }
     }
 }
