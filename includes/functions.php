@@ -466,4 +466,9 @@ function meta_refresh($url, $delay = 3)
     add_action('mr_head', create_function('', "echo '$meta';"));
 }
 
+function is_admin_panel()
+{
+    return (defined('IN_ADMIN'));
+}
+
 ?>

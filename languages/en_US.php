@@ -84,5 +84,9 @@ $lang = array(
 		'14'	=> '[UTC + 14] Line Island Time',
 	),
 
+// default categories hook
+    'CATEGORIES'    => 'Categories',
+    'NEW_CATEGORY'  => 'Add Category',
+
 );
 ?>

@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <meta name="description" content=""/>
   <title>{TITLE}</title>
-  <link rel="stylesheet" type="text/css" href="./style/css/bootstrap.css"/>
+  <link rel="stylesheet" type="text/css" href="<?php get_admin_template_directory_uri(); ?>/css/bootstrap.css"/>
 
   <style type="text/css">
     body {
@@ -18,7 +18,7 @@
   </style>
 
   <!--[if lt IE 9]>
-    <script src="./js/html5shiv.js"></script>
+    <script src="<?php get_admin_template_directory_uri(); ?>/js/html5shiv.js"></script>
   <![endif]-->
 </head>
 <body>

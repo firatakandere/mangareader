@@ -30,6 +30,8 @@ define('INACTIVE_USERS', 1);
 define('REGISTERED_USERS', 2);
 define('GUESTS', 3);
 
+// Database Tables
+define('CATEGORIES_TABLE', $dbprefix . 'categories');
 define('CONFIG_TABLE', $dbprefix . 'config');
 define('MANGA_TABLE', $dbprefix . 'manga');
 define('CATEGORY_TABLE', $dbprefix . 'category');

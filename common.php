@@ -89,8 +89,16 @@ if (($config = $cache->get('config')) === false)
 $user = new User();
 $acl = new Acl();
 
-
 $lang_domains = array();
 load_langdomain($mangareader_root_path . 'languages', 'default');
+
+// If currently on admininstration panel, load default hooks
+if (is_admin_panel())
+{
+    foreach (glob($mangareader_admin_root_path . 'hooks/*.php') as $filename)
+    {
+        include_once($filename);
+    }
+}
 
 ?>

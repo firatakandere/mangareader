@@ -13,14 +13,23 @@
 * @ignore
 */
 define('IN_MANGAREADER', true);
+define('IN_ADMIN', true);
 $mangareader_root_path = (defined('MANGAREADER_ROOT_PATH')) ? MANGAREADER_ROOT_PATH : './../';
+$mangareader_admin_root_path = (defined('MANGAREADER_ADMIN_ROOT_PATH')) ? MANGAREADER_ADMIN_ROOT_PATH : './';
 require($mangareader_root_path . 'common.php');
 
-$mangareader_admin_root_path = (defined('MANGAREADER_ADMIN_ROOT_PATH')) ? MANGAREADER_ADMIN_ROOT_PATH : './';
+// Prepare menu pages
+do_action('admin_menu_pages');
+include_once($mangareader_root_path . 'includes/functions-admin.php');
 
-$template->set_custom_template($mangareader_admin_root_path . 'style/', 'admin');
-$template->set_filenames(array('body' => 'general_body.html'));
+$page = request_var('page', '');
+$subpage = request_var('subpage', '');
 
-page_footer();
+get_admin_header();
+get_admin_sidebar();
 
+load_hook($page, $subpage);
+
+
+get_admin_footer();
 ?>

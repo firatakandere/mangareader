@@ -31,6 +31,11 @@ if (!defined('IN_MANGAREADER'))
 */
 function add_menu_page($menu_title, $page_title, $capability, $menu_slug, $function = '', $position = null)
 {
+    if (!is_admin_panel())
+    {
+        return;
+    }
+
     global $admin_pages;
 
     if (isset($admin_pages[$menu_slug]) && defined('DEBUG'))
@@ -62,6 +67,11 @@ function add_menu_page($menu_title, $page_title, $capability, $menu_slug, $funct
 */
 function add_submenu_page($parent_slug, $page_title, $menu_title, $capability, $menu_slug, $function = '', $position = null)
 {
+    if (!is_admin_panel())
+    {
+        return;
+    }
+
     global $admin_pages;
 
     if (!isset($admin_pages[$parent_slug]))
@@ -96,6 +106,11 @@ function add_submenu_page($parent_slug, $page_title, $menu_title, $capability, $
 */
 function remove_menu_page($menu_slug)
 {
+    if (!is_admin_panel())
+    {
+        return;
+    }
+
     global $admin_pages;
 
     if (!isset($admin_pages[$menu_slug]))
@@ -115,6 +130,11 @@ function remove_menu_page($menu_slug)
 */
 function remove_submenu_page($menu_slug, $submenu_slug)
 {
+    if (!is_admin_panel())
+    {
+        return;
+    }
+
     global $admin_pages;
 
     if (!isset($admin_pages[$menu_slug]['subpages'][$submenu_slug]))
