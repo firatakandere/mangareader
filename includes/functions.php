@@ -140,6 +140,7 @@ function request_var($var_name, $default, $multibyte = false, $cookie = false)
 *
 * @param string $config_name Unique config name
 * @param string $config_value Value for the config
+*
 * @return void
 */
 function set_config($config_name, $config_value)
@@ -249,8 +250,8 @@ function get_browser_fingerprint()
 }
 
 /**
-* Ger user ip
-*
+* Get user ip
+* @todo IPv6 support
 * @return string User IP
 */
 function get_ip()
@@ -332,6 +333,16 @@ function exit_handler()
 function generate_url($suffix, $mod_rewrite_suffix = false)
 {
     global $config;
+
+    // Make sure it does not start with trailing slash
+    if (substr($suffix, 0, 1) == '/')
+    {
+	$suffix = substr($suffix, 1);
+    }
+    if ($mod_rewrite_suffix !== false && substr($mod_rewrite_suffix, 0, 1) == '/')
+    {
+	$mod_rewrite_suffix = substr($mod_rewrite_suffix, 1);
+    }
 
     $url = '';
     if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
@@ -469,6 +480,126 @@ function meta_refresh($url, $delay = 3)
 function is_admin_panel()
 {
     return (defined('IN_ADMIN'));
+}
+
+function msg_handler($errno, $msg_text, $errfile, $errline)
+{
+    global $config, $mangareader_root_path;
+
+    // Do not display notices if we suppress them via @
+    if (error_reporting() == 0 && $errno != E_USER_ERROR && $errno != E_USER_WARNING && $errno != E_USER_NOTICE)
+    {
+	return;
+    }
+
+    if (!defined('E_DEPRECATED'))
+    {
+	define('E_DEPRECATED', 8192);
+    }
+
+    switch ($errno)
+    {
+	case E_NOTICE:
+	case E_WARNING:
+
+	    // Check the error reporting level and return if the error level does not match
+	    // If DEBUG is defined the default level is E_ALL
+	    if (($errno & ((defined('DEBUG')) ? E_ALL : error_reporting())) == 0)
+	    {
+		return;
+	    }
+
+	    /**
+	    * @todo filter root path from $errfile
+	    * @todo filter root path from $msg_text
+	    */
+
+	    $error_name = ($errno === E_WARNING) ? 'PHP Warning' : 'PHP Notice';
+
+	    echo '<b>[MangaReader Debug] ' . $error_name . '</b>: in file <b>' . $errfile . '</b> on line <b>' . $errline . '</b>: <b>' . $msg_text . '</b><br />' . "\n";
+
+	    return;
+	break;
+
+	case E_USER_ERROR:
+	    if (function_exists('__'))
+	    {
+		$msg_text = __($msg_text);
+		$msg_title = (!isset($msg_title)) ? __('GENERAL_ERROR') : __($msg_title);
+
+		$l_return_index = sprintf(__('RETURN_INDEX'), '<a href="' . $mangareader_root_path . '">', '</a>');
+		$l_notify = '';
+
+		if (!empty($config['board_contact']))
+		{
+		    $l_notify = '<p>' . sprintf(__('NOTIFY_ADMIL_EMAIL'), $config['board_contact']) . '</p>';
+		}
+	    }
+	    else
+	    {
+		$msg_title = 'General Error';
+		$l_return_index = '<a href="' . $mangareader_root_path . '">Return to index page</a>';
+		$l_notify = '';
+		if (!empty($config['board_contact']))
+		{
+		    $l_notify = '<p>Please notify the board administrator or webmaster: <a href="mailto:' . $config['board_contact'] . '">' . $config['board_contact'] . '</a></p>';
+		}
+	    }
+
+	    $log_text = $msg_text;
+
+	    /**
+	    * @todo backtrace
+	    */
+
+	    /**
+	    * @todo to here
+	    */
+
+	    // Do not send 200 OK, but service unavailable on errors
+	    send_status_line(503, 'Service Unavailable');
+    }
+}
+
+/**
+* Outputs correct status line header.
+*
+* Depending on php sapi one of the two following forms is used:
+*
+* Status: 404 Not Found
+*
+* HTTP/1.x 404 Not Found
+*
+* HTTP version is taken from HTTP_VERSION environment variable,
+* and defaults to 1.0.
+*
+* Sample usage:
+*
+* send_status_line(404, 'Not Found');
+*
+* @param int $code HTTP status code
+* @param string $message Message for the status code
+* @return void
+*/
+function send_status_line($code, $message)
+{
+	if (substr(strtolower(@php_sapi_name()), 0, 3) === 'cgi')
+	{
+		// in theory, we shouldn't need that due to php doing it. Reality offers a differing opinion, though
+		header("Status: $code $message", true, $code);
+	}
+	else
+	{
+		if (!empty($_SERVER['SERVER_PROTOCOL']))
+		{
+			$version = $_SERVER['SERVER_PROTOCOL'];
+		}
+		else
+		{
+			$version = 'HTTP/1.0';
+		}
+		header("$version $code $message", true, $code);
+	}
 }
 
 ?>

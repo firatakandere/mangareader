@@ -25,7 +25,7 @@ class Hooks
 {
     private $hooks = array();
 
-    function add_action($where, $callback, $priority = 50)
+    public function add_action($where, $callback, $priority = 50)
     {
         if (!isset($this->hooks[$where]) || !is_array($this->hooks[$where]))
         {
@@ -34,7 +34,7 @@ class Hooks
         $this->hooks[$where][$callback] = $priority;
     }
 
-    function remove_action($where, $callback)
+    public function remove_action($where, $callback)
     {
         if (isset($this->hooks[$where][$callback]))
         {
@@ -42,7 +42,7 @@ class Hooks
         }
     }
 
-    function execute($where, $args = array())
+    public function execute($where, $args = array())
     {
         if ((isset($this->hooks[$where])) && is_array($this->hooks[$where]))
         {
@@ -59,18 +59,43 @@ class Hooks
 $hooking_daemon = new Hooks();
 $admin_pages = array();
 
+/**
+* Add new action to the hook
+*
+* @param string $where The string which specify the hooking grup
+* @param string $callback The function name which will be called
+* @param int $priority Callback priority
+*
+* @return void
+*/
 function add_action($where, $callback, $priority = 50)
 {
     global $hooking_daemon;
     $hooking_daemon->add_action($where, $callback, $priority);
 }
 
+/**
+* Remove an action from the hook
+*
+* @param string $where The string which specify the hooking grup
+* @param string $callback The function name which will be removed from hooking group
+*
+* @return void
+*/
 function remove_action($where, $callback)
 {
     global $hooking_daemon;
     $hooking_daemon->remove_action($where, $callback);
 }
 
+/**
+* Execute an hooking group
+*
+* @param string $where The string which specify the hooking group that will be executed
+* @param array $args Function arguments
+*
+* @return void
+*/
 function do_action($where, $args = array())
 {
     global $hooking_daemon;

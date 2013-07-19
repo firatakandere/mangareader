@@ -7,7 +7,9 @@ if (!defined('IN_MANGAREADER') || !defined('IN_ADMIN'))
     exit;
 }
 ?>
-<form class="form-horizontal">
+$get_new_category_uri();
+
+<form class="form-horizontal" action="">
     <div class="control-group">
         <label class="control-label" for="inputCategoryName"><?php _e('CATEGORY_NAME'); ?></label>
         <div class="controls">

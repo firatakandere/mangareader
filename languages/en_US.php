@@ -2,6 +2,12 @@
 
 $lang = array(
 
+// Common
+    'GENERAL_ERROR' => 'General Error',
+    'NOTIFY_ADMIN_EMAIL'    => 'Please notify the board administrator or webmaster: <a href="mailto:%1$s">%1$s</a>',
+    'RETURN_INDEX'  => '%sReturn to the index page%s',
+    'SUBMIT'    => 'Submit',
+
 // Template attributes
     'CHARSET'   => 'UTF-8',
 
@@ -87,6 +93,8 @@ $lang = array(
 // default categories hook
     'CATEGORIES'    => 'Categories',
     'NEW_CATEGORY'  => 'Add Category',
+    'CATEGORY_NAME' => 'Category Name',
+    'IS_ADULT'      => 'Is Adult?',
 
 );
 ?>
