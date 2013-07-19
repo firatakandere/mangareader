@@ -23,11 +23,14 @@ if (!defined('IN_MANGAREADER'))
 */
 class Cache
 {
-    var $cache_dir;
-    var $not_writable = false;
-    var $remove_at_the_end = array();
+    private $cache_dir;
+    private $not_writable = false;
+    private $remove_at_the_end = array();
 
-    function __construct()
+    /**
+    * Contructor
+    */
+    public function __construct()
     {
         global $mangareader_root_path;
 
@@ -55,7 +58,7 @@ class Cache
     * @param mixed $data Cached data
     * @return boolean Either true if everything is okay, or false if something is wrong
     */
-    function put($filename, $data)
+    public function put($filename, $data)
     {
         if ($this->not_writable || defined('DEBUG_EXTRA'))
         {
@@ -70,8 +73,8 @@ class Cache
         $file_data = '<' . '?php exit; ?' . '>';
         $file_data .= serialize($data);
 
-        $result = file_put_contents($this->_get_file_path($filename), $file_data, LOCK_EX);
-        chmod($this->_get_file_path($filename), 0666);
+        $result = file_put_contents($this->get_file_path($filename), $file_data, LOCK_EX);
+        chmod($this->get_file_path($filename), 0666);
         return ($result !== false);
     }
 
@@ -81,19 +84,19 @@ class Cache
     * @param string $filename Filename without extension
     * @return false Either true if the data is fetched from cache or false if the file does not exist
     */
-    function get($filename)
+    public function get($filename)
     {
         if ($this->not_writable || defined('DEBUG_EXTRA'))
         {
             return false;
         }
 
-        if (!file_exists($this->_get_file_path($filename)))
+        if (!file_exists($this->get_file_path($filename)))
         {
             return false;
         }
 
-        return unserialize(str_replace('<' . '?php exit; ?' . '>', '', file_get_contents($this->_get_file_path($filename))));
+        return unserialize(str_replace('<' . '?php exit; ?' . '>', '', file_get_contents($this->get_file_path($filename))));
     }
 
     /**
@@ -102,7 +105,7 @@ class Cache
     * @param string $filename Filename without extension
     * @return string Full path of file
     */
-    function _get_file_path($filename)
+    private function get_file_path($filename)
     {
         return $this->cache_dir . $filename . '.php';
     }
@@ -113,14 +116,14 @@ class Cache
     * @param string $filename Filename without extension
     * @return boolean Either true if everything is okay, or false if something is wrong
     */
-    function remove($filename)
+    public function remove($filename)
     {
         if ($this->not_writable)
         {
             return false;
         }
 
-        return unlink($this->_get_file_path($filename));
+        return unlink($this->get_file_path($filename));
     }
 
     /**
@@ -128,14 +131,14 @@ class Cache
     *
     * @return boolean Either true if everything is okay, or false if something is wrong
     */
-    function flush()
+    public function flush()
     {
         if ($this->not_writable)
         {
             return false;
         }
 
-        $result = 'true';
+        $result = true;
 
         // All php files in cache directory contains cache entries
         foreach (glob($this->cache_dir . '*.php') as $filepath)
@@ -154,7 +157,7 @@ class Cache
     * @param string $filename Filename without extension
     * @return void
     */
-    function remove_end($filename)
+    public function remove_end($filename)
     {
         if (!in_array($filename, $this->remove_at_the_end))
         {

@@ -1,6 +1,5 @@
 <?php
 
-
 add_action('admin_menu_pages', 'add_default_category');
 
 function add_default_category()
@@ -16,7 +15,9 @@ function default_category()
 
 function default_add_category()
 {
+    global $mangareader_admin_root_path;
 
+    include_once($mangareader_admin_root_path . 'hooks/category_styles/new_category.php');
 }
 
 ?>
