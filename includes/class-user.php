@@ -212,12 +212,15 @@ class User
 
     private function load_defaults()
     {
-        global $config;
-        $this->data = array(
-            'user_id'       => ANONYMOUS,
-            'template_path' => $config['default_template'],
-            'language_name'      => 'en_US',
-        );
+        global $config, $db;
+        $sql = 'SELECT *
+                FROM ' . USERS_TABLE . '
+                WHERE user_id = ' . (int) ANONYMOUS;
+        $sth = $db->prepare($sql);
+        $sth->execute();
+        $this->data = $sth->fetch(PDO::FETCH_ASSOC);
+        $this->data['template_path'] = $config['default_template'];
+        $this->data['language_name'] = $config['default_language'];
     }
 }
 

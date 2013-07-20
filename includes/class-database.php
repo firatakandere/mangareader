@@ -25,7 +25,10 @@ class Database extends PDO
 {
     private $transactions = 0;
 
-    function beginTransaction()
+    /**
+    * Improved beginTransaction function
+    */
+    public function beginTransaction()
     {
         if (!$this->transactions)
         {
@@ -36,7 +39,10 @@ class Database extends PDO
         return false;
     }
 
-    function commit()
+    /**
+    * Improved transaction commit function
+    */
+    public function commit()
     {
         if ($this->transactions)
         {
@@ -47,7 +53,10 @@ class Database extends PDO
         return false;
     }
 
-    function rollBack()
+    /**
+    * Improved rollBack function
+    */
+    public function rollBack()
     {
         if ($this->transactions >= 0)
         {
@@ -66,7 +75,7 @@ class Database extends PDO
     * @param array $assoc_ary Assocated array, array keys stand for sql fields, and values stand for sql values
     * @return mixed Either false if something is wrong or query string if everything is okay
     */
-    function build_array($mode, $assoc_ary)
+    public function build_array($mode, $assoc_ary)
     {
         if (!is_array($assoc_ary))
         {
@@ -80,7 +89,7 @@ class Database extends PDO
             foreach ($assoc_ary as $key => $var)
             {
                 $fields[] = $key;
-                $values[] = $this->_validate_data($var);
+                $values[] = $this->validate_data($var);
             }
 
             $query = '(' . implode(', ', $fields) . ') VALUES (' . implode(', ', $values) . ')';
@@ -89,7 +98,7 @@ class Database extends PDO
         {
             foreach ($assoc_ary as $key => $var)
             {
-                $values[] = "$key = " . $this->_validate_data($var);
+                $values[] = "$key = " . $this->validate_data($var);
             }
 
             $query = implode(($mode == 'UPDATE') ? ', ' : ' AND ', $values);
@@ -101,7 +110,7 @@ class Database extends PDO
     /**
     * Validate data for sql query
     */
-    function _validate_data($var)
+    private function validate_data($var)
     {
         if (is_null($var))
         {

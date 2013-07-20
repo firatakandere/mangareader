@@ -7,6 +7,8 @@ $lang = array(
     'NOTIFY_ADMIN_EMAIL'    => 'Please notify the board administrator or webmaster: <a href="mailto:%1$s">%1$s</a>',
     'RETURN_INDEX'  => '%sReturn to the index page%s',
     'SUBMIT'    => 'Submit',
+    'INFORMATION'   =>  'Information',
+    'REMOVE_INSTALL_PATH'   => 'Your installation path is still available. Please delete or rename it.',
 
 // Template attributes
     'CHARSET'   => 'UTF-8',

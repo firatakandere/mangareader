@@ -29,13 +29,6 @@ if (!file_exists($mangareader_root_path . 'config.php') || filesize($mangareader
     }
 }
 
-if (file_exists($mangareader_root_path . 'install') && !defined('IN_INSTALL'))
-{
-    /**
-    * @todo install path still exists error
-    */
-}
-
 require($mangareader_root_path . 'includes/startup.php');
 require($mangareader_root_path . 'includes/functions.php');
 require($mangareader_root_path . 'config.php');
@@ -48,6 +41,8 @@ require($mangareader_root_path . 'includes/plugin.php');
 require($mangareader_root_path . 'includes/functions-template.php');
 require($mangareader_root_path . 'includes/utf/utf_tools.php');
 require($mangareader_root_path . 'includes/class-acl.php');
+
+set_error_handler(defined('MANGAREADER_MSG_HANDLER') ? MANGAREADER_MSG_HANDLER : 'msg_handler');
 
 // If the database port is not empty, suffix it to the database host with ':' seperator
 if (!empty($dbport))
@@ -91,6 +86,11 @@ $acl = new Acl();
 
 $lang_domains = array();
 load_langdomain($mangareader_root_path . 'languages', 'default');
+
+if (file_exists($mangareader_root_path . 'install') && !defined('IN_INSTALL'))
+{
+    trigger_error('REMOVE_INSTALL_PATH', E_USER_WARNING);
+}
 
 // If currently on admininstration panel, load default hooks
 if (is_admin_panel())

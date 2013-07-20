@@ -242,7 +242,6 @@ function get_browser_fingerprint()
     $data .= $_SERVER['HTTP_USER_AGENT'];
     $data .= $_SERVER['HTTP_ACCEPT'];
     $data .= $config['board_salt'];
-    $data .= $_SERVER['HTTP_ACCEPT_CHARSET'];
     $data .= $_SERVER['HTTP_ACCEPT_ENCODING'];
     $data .= $_SERVER['HTTP_ACCEPT_LANGUAGE'];
 
@@ -484,7 +483,7 @@ function is_admin_panel()
 
 function msg_handler($errno, $msg_text, $errfile, $errline)
 {
-    global $config, $mangareader_root_path;
+    global $acl, $config, $mangareader_root_path, $user;
 
     // Do not display notices if we suppress them via @
     if (error_reporting() == 0 && $errno != E_USER_ERROR && $errno != E_USER_WARNING && $errno != E_USER_NOTICE)
@@ -558,6 +557,104 @@ function msg_handler($errno, $msg_text, $errfile, $errline)
 
 	    // Do not send 200 OK, but service unavailable on errors
 	    send_status_line(503, 'Service Unavailable');
+
+	    /**
+	    * @todo html output
+	    */
+	break;
+
+	case E_USER_WARNING:
+	case E_USER_NOTICE:
+
+	    if (empty($user->sid))
+	    {
+		/**
+		* @todo Re-initialize user constructor
+		*/
+		session_start();
+	    }
+
+	    // Re-initialize acl
+	    $acl->initialize_permissions();
+
+	    if ($msg_text == 'NO_MANGA' || $msg_text == 'NO_CATEGORY')
+	    {
+		send_status_line(404, 'Not Found');
+	    }
+
+	    $msg_text = __($msg_text);
+	    $msg_title = (!isset($msg_title)) ? __('INFORMATION') : __($msg_title);
+
+	    /**
+	    * @todo Check also if user has permission to reach administration panel
+	    */
+	    if (defined('IN_ADMIN'))
+	    {
+		/**
+		* @todo set page title as $msg_title
+		*/
+		get_admin_header();
+	    }
+	    else
+	    {
+		/**
+		* @todo set page title as $msg_title
+		*/
+		get_header();
+	    }
+
+	    /**
+	    * @todo Function below do not work
+	    */
+	    function get_message_title($return = false)
+	    {
+		global $msg_title;
+		if ($return)
+		{
+		    return $msg_title;
+		}
+		echo $msg_title;
+	    }
+
+	    function get_message_text($return = false)
+	    {
+		global $msg_text;
+		if ($return)
+		{
+		    return $msg_text;
+		}
+		echo $msg_text;
+	    }
+
+	    function is_user_warning()
+	    {
+		global $errno;
+		return ($errno == E_USER_WARNING);
+	    }
+
+	    function is_user_notice()
+	    {
+		global $errno;
+		return ($errno == E_USER_NOTICE);
+	    }
+
+	    locate_template('message_box.php', true);
+
+	    /**
+	    * @todo Check also if user has permission to reach administration panel
+	    */
+	    if (defined('IN_ADMIN'))
+	    {
+		get_admin_footer();
+	    }
+	    else
+	    {
+		get_footer();
+	    }
+
+	    exit_handler();
+
+	    break;
     }
 }
 
@@ -583,23 +680,24 @@ function msg_handler($errno, $msg_text, $errfile, $errline)
 */
 function send_status_line($code, $message)
 {
-	if (substr(strtolower(@php_sapi_name()), 0, 3) === 'cgi')
+    if (substr(strtolower(@php_sapi_name()), 0, 3) === 'cgi')
+    {
+	// in theory, we shouldn't need that due to php doing it. Reality offers a differing opinion, though
+	header("Status: $code $message", true, $code);
+    }
+    else
+    {
+	if (!empty($_SERVER['SERVER_PROTOCOL']))
 	{
-		// in theory, we shouldn't need that due to php doing it. Reality offers a differing opinion, though
-		header("Status: $code $message", true, $code);
+	    $version = $_SERVER['SERVER_PROTOCOL'];
 	}
 	else
 	{
-		if (!empty($_SERVER['SERVER_PROTOCOL']))
-		{
-			$version = $_SERVER['SERVER_PROTOCOL'];
-		}
-		else
-		{
-			$version = 'HTTP/1.0';
-		}
-		header("$version $code $message", true, $code);
+	    $version = 'HTTP/1.0';
 	}
+
+	header("$version $code $message", true, $code);
+    }
 }
 
 ?>

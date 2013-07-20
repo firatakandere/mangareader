@@ -48,6 +48,13 @@ class Acl extends User
     public function __construct()
     {
         parent::__construct();
+        $this->initialize_permissions();
+    }
+
+    public function initialize_permissions()
+    {
+        $this->group_permissions = array();
+        $this->user_permissions = array();
         $this->init_group_permissions();
         $this->init_user_permissions();
     }
