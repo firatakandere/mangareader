@@ -39,7 +39,7 @@ class Cache
         {
             $this->not_writable = true;
 
-            trigger_error('Cache directory is not writable', E_USER_WARNING);
+            trigger_error('CACHE_NOT_WRITABLE', E_WARNING);
         }
     }
 

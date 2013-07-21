@@ -175,6 +175,8 @@ function set_config($config_name, $config_value)
 * Check if path is writable
 *
 * This will work for both *nix and windows systems
+* @see https://bugs.php.net/bug.php?id=27609
+* @see https://bugs.php.net/bug.php?id=30931
 *
 * @param string $path Use trailing slash for folders!
 * @return boolean Either true if the path is writable or false if it is not
@@ -231,7 +233,7 @@ function reader_is_writable($path)
 
 /**
 * Generate fingerprint for user browser
-*
+* @todo Find a better way of getting fingerprint
 * @return string hashed fingerprint
 */
 function get_browser_fingerprint()
@@ -310,8 +312,14 @@ function page_header()
 */
 function page_footer()
 {
-    global $db;
-    print_r($db->errorInfo());
+    if (defined('DEBUG'))
+    {
+	/**
+	* @todo Make a better DB debugger view
+	*/
+	global $db;
+	print_r($db->errorInfo());
+    }
     exit_handler();
 }
 
@@ -372,6 +380,7 @@ function redirect($url)
 	/**
 	* @todo give debug warning
 	*/
+	trigger_error('Headers already sent, redirect cannot be used', E_WARNING);
     }
     else
     {
@@ -508,10 +517,8 @@ function msg_handler($errno, $msg_text, $errfile, $errline)
 		return;
 	    }
 
-	    /**
-	    * @todo filter root path from $errfile
-	    * @todo filter root path from $msg_text
-	    */
+	    $errfile = filter_root_path($errfile);
+	    $msg_text = filter_root_path($msg_text);
 
 	    $error_name = ($errno === E_WARNING) ? 'PHP Warning' : 'PHP Notice';
 
@@ -604,51 +611,25 @@ function msg_handler($errno, $msg_text, $errfile, $errline)
 	    }
 
 	    /**
-	    * @todo Function below do not work
+	    * @todo Replace these into functions
 	    */
-	    function get_message_title($return = false)
-	    {
-		global $msg_title;
-		if ($return)
-		{
-		    return $msg_title;
-		}
-		echo $msg_title;
-	    }
+	    $GLOBALS['msg_title'] = $msg_title;
+	    $GLOBALS['msg_text'] = $msg_text;
+	    $GLOBALS['is_user_warning'] = ($errno == E_USER_WARNING);
+	    $GLOBALS['is_user_notice'] = ($errno == E_USER_NOTICE);
 
-	    function get_message_text($return = false)
-	    {
-		global $msg_text;
-		if ($return)
-		{
-		    return $msg_text;
-		}
-		echo $msg_text;
-	    }
-
-	    function is_user_warning()
-	    {
-		global $errno;
-		return ($errno == E_USER_WARNING);
-	    }
-
-	    function is_user_notice()
-	    {
-		global $errno;
-		return ($errno == E_USER_NOTICE);
-	    }
-
-	    locate_template('message_box.php', true);
 
 	    /**
 	    * @todo Check also if user has permission to reach administration panel
 	    */
 	    if (defined('IN_ADMIN'))
 	    {
+		locate_admin_template('message_box.php', true);
 		get_admin_footer();
 	    }
 	    else
 	    {
+		locate_template('message_box.php', true);
 		get_footer();
 	    }
 
@@ -698,6 +679,61 @@ function send_status_line($code, $message)
 
 	header("$version $code $message", true, $code);
     }
+}
+
+/**
+* Remove absolute path from error messages
+*
+* @param string $errfile Absolute root path
+*
+* @return Relative file path
+*/
+function filter_root_path($errfile)
+{
+    static $root_path;
+
+    if (empty($root_path))
+    {
+	$root_path = realpath(dirname(__FILE__) . '/../');
+    }
+
+    return str_replace(array($root_path, '\\'), array('[ROOT]', '/'), $errfile);
+}
+
+/**
+* Module loader
+* Currently used only in ucp
+*
+* @param Module group (eg, ucp)
+* @param Module name (eg, register)
+*
+* @return void
+*/
+function load_module($module_group, $module_name)
+{
+    global $mode, $id, $mangareader_root_path;
+
+    if (!isset($mode))
+    {
+	$mode = request_var('mode', '');
+    }
+    if (!isset($id))
+    {
+	$id = request_var('id', 0);
+    }
+
+    $module_file = $mangareader_root_path . 'includes/' . $module_group . '/' . $module_group . '_' . $mode . '.php';
+
+    if (!file_exists($module_group))
+    {
+	trigger_error("$module_name module of $module_group does not exist", E_WARNING);
+    }
+
+    include_once($module_file);
+
+    $m_name = $module_group . '_' . $module_name;
+    $module = new $m_name();
+    $module->main($id, $mode);
 }
 
 ?>

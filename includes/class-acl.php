@@ -51,6 +51,10 @@ class Acl extends User
         $this->initialize_permissions();
     }
 
+    /**
+    * Initialize both group and user permissions by calling their functions
+    * Also reset their arrays for re-initialization
+    */
     public function initialize_permissions()
     {
         $this->group_permissions = array();
@@ -76,10 +80,13 @@ class Acl extends User
             return true;
         }
 
-        // Otherwise, both of them are false (no), retun false
+        // Otherwise, both of them are false (no), return false
         return false;
     }
 
+    /**
+    * Initialize permissions of user's group
+    */
     private function init_group_permissions()
     {
         global $db;
@@ -98,6 +105,9 @@ class Acl extends User
         }
     }
 
+    /**
+    * Initialize user's own permissions
+    */
     private function init_user_permissions()
     {
         global $db;

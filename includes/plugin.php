@@ -23,7 +23,7 @@ if (!defined('IN_MANGAREADER'))
 *
 * @param string $menu_title Title for the menu
 * @param string $page_title Title for the page
-* @todo Add param here after capabilities have done
+* @param string $capability Name of the required permission to reach the page
 * @param string $menu_slug Unique menu slug, do not use special characters
 * @param string $function The function name which will be called when the page is loaded
 * @param int $position Position of the menu item
@@ -40,7 +40,7 @@ function add_menu_page($menu_title, $page_title, $capability, $menu_slug, $funct
 
     if (isset($admin_pages[$menu_slug]) && defined('DEBUG'))
     {
-        trigger_error("add_menu_page: Menu slug $menu_slug already exists, it will be overwritten.", E_USER_WARNING);
+        trigger_error("add_menu_page: Menu slug $menu_slug already exists, it will be overwritten.", E_NOTICE);
     }
 
     $admin_pages[$menu_slug] = array(
@@ -59,7 +59,7 @@ function add_menu_page($menu_title, $page_title, $capability, $menu_slug, $funct
 * @param string $parent_slug Slug name of parent page
 * @param string $menu_title Title for the menu
 * @param string $page_title Title for the page
-* @todo Add param here after capabilities have done
+* @param string $capability Name of the required permission to reach the subpage
 * @param string $menu_slug Unique menu slug, do not use special characters
 * @param string $function The function name which will be called when the page is loaded
 * @param int $position Position of the menu item
@@ -78,14 +78,14 @@ function add_submenu_page($parent_slug, $page_title, $menu_title, $capability, $
     {
         if (defined('DEBUG'))
         {
-            trigger_error("add_submenu_page: Parent slug $parent_slug does not exist.", E_USER_WARNING);
+            trigger_error("add_submenu_page: Parent slug $parent_slug does not exist.", E_WARNING);
         }
         return false;
     }
 
     if (isset($admin_pages[$parent_slug]['subpages'][$menu_slug]) && defined('DEBUG'))
     {
-        trigger_error("add_submenu_page: Menu slug $menu_slug already exists, it will be overwritten", E_USER_WARNING);
+        trigger_error("add_submenu_page: Menu slug $menu_slug already exists, it will be overwritten", E_NOTICE);
     }
 
     $admin_pages[$parent_slug]['subpages'][$menu_slug] = array(

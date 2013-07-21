@@ -60,7 +60,7 @@ try
 }
 catch (PDOException $exception)
 {
-    trigger_error('Connection failed: ' . $exception->getMessage());
+    trigger_error('Database connection failed: ' . $exception->getMessage(), E_USER_ERROR);
 }
 
 // We do not need this anymore, better to get rid of it for security
@@ -81,15 +81,18 @@ if (($config = $cache->get('config')) === false)
     $cache->put('config', $config);
 }
 
-$user = new User();
-$acl = new Acl();
-
+/**
+* @todo add this to the msg handler
+*/
 $lang_domains = array();
 load_langdomain($mangareader_root_path . 'languages', 'default');
 
+$user = new User();
+$acl = new Acl();
+
 if (file_exists($mangareader_root_path . 'install') && !defined('IN_INSTALL'))
 {
-    trigger_error('REMOVE_INSTALL_PATH', E_USER_WARNING);
+    //trigger_error('REMOVE_INSTALL_PATH', E_USER_WARNING);
 }
 
 // If currently on admininstration panel, load default hooks

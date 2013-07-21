@@ -19,6 +19,8 @@ include_once($mangareader_root_path . 'includes/functions-user.php');
 
 $mode = request_var('mode', '');
 $submit = (isset($_POST['submit'])) ? true : false;
+$redirect = request_var('redirect', generate_url('', ''));
+
 
 switch ($mode)
 {
@@ -36,15 +38,12 @@ switch ($mode)
         {
             if ($user->login($data['username'], $data['password']))
             {
-                /**
-                * @todo redirect index
-                */
+                meta_refresh($redirect, 3);
+                trigger_error('LOGIN_SUCCESSFUL');
             }
             else
             {
-                /**
-                * @todo username/password invalid
-                */
+                $data['invalid_login'] = true;
             }
         }
 
@@ -54,10 +53,7 @@ switch ($mode)
     case 'register':
         if (!$config['register_open'])
         {
-            /**
-            * @todo make here better
-            */
-            trigger_error('registers are not open atm', E_USER_WARNING);
+            trigger_error('REGISTERS_CLOSED', E_USER_WARNING);
         }
         if (isset($_REQUEST['not_agreed']) || $user->data['user_id'] != ANONYMOUS)
         {
@@ -138,7 +134,10 @@ switch ($mode)
     break;
 
     case 'logout':
-        $user->logout(generate_url('', ''));
+        /**
+        * @todo Maybe meta refresh?
+        */
+        $user->logout($redirect);
     break;
     default:
 

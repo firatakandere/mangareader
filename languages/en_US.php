@@ -22,6 +22,13 @@ $lang = array(
     'PASSWORD_CONFIRM'  => 'Password (Confirm)',
     'REGISTER'  => 'Register',
     'LOGOUT'    => 'Logout',
+    'LOGIN_SUCCESSFUL'  => 'You have logged in successfully, redirecting...', // @todo make this better
+    /**
+    * @todo Forgot password section
+    */
+    'INVALID_LOGIN' => 'Username or password is invalid.',
+
+    'PERMISSION_DENIED' => 'You don\'t have permission to reach this page',
 
 // registration errors
     'TOO_SHORT_USERNAME'    => 'Username is too short',
@@ -40,6 +47,9 @@ $lang = array(
     'EMAIL_MATCH_ERROR'     => 'Email addresses do not match',
     'TOO_SMALL_TZ'          => 'Timezone value is too small',
     'TOO_LARGE_TZ'          => 'Timezone value is too large',
+    'REGISTERS_CLOSED'      => 'Registrations are currently closed',
+
+    'CACHE_NOT_WRITABLE'    => 'Cache directory is not writable',
 
 
 // search section

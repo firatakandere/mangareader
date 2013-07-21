@@ -68,10 +68,7 @@ function load_hook($page = '', $subpage = '')
         {
             if (!$acl->has_perm($admin_pages[$page]['capability']))
             {
-                /**
-                * @todo Permission denied error
-                */
-                trigger_error('permission denied');
+                trigger_error('PERMISSION_DENIED');
                 return false;
             }
             call_user_func($admin_pages[$page]['function']);

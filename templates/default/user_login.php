@@ -1,4 +1,13 @@
 <?php get_header(); ?>
+<?php
+if (isset($data['invalid_login'])) :
+?>
+<div class="alert alert-error">
+<?php _e('INVALID_LOGIN'); ?>
+</div>
+<?php
+endif;
+?>
 <form class="form-horizontal" method="post" action="<?php get_login_uri(); ?>">
     <fieldset>
         <legend><?php _e('LOGIN'); ?></legend>
