@@ -48,11 +48,10 @@ $lang = array(
 // login errors
     'LOGIN_EMPTY_USERNAME'  => 'You cannot login without a username',
     'LOGIN_EMPTY_PASSWORD'  => 'You cannot login without a password',
-    'LOGIN_INVALID'         => 'Invalid username or password',
     /**
     * @todo add forgot password section when it's done
     */
-    'INVALID_LOGIN' => 'Username or password is invalid.',
+    'LOGIN_INVALID'         => 'Invalid username or password',
 
 
     'CACHE_NOT_WRITABLE'    => 'Cache directory is not writable',
