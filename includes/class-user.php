@@ -38,7 +38,14 @@ class User
         $sql = 'DELETE FROM ' . SESSIONS_TABLE . '
                 WHERE session_last_visit < ' . (int)$expiration;
         $db->query($sql);
-        //
+    }
+
+    /**
+    * Session begin
+    */
+    public function session_begin()
+    {
+        global $config, $db;
 
         // Start session if has not started yet
         if ((!isset($_SESSION) || !is_array($_SESSION)) && !headers_sent())
@@ -102,6 +109,15 @@ class User
                 $this->logout();
             }
         }
+    }
+
+    /**
+    * @todo Improve this function
+    */
+    public function setup()
+    {
+        global $lang_domains, $mangareader_root_path;
+        load_langdomain($mangareader_root_path . 'languages', 'default');
     }
 
     public function logout($redirect = '')

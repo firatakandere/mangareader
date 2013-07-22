@@ -37,28 +37,24 @@ if (!defined('IN_MANGAREADER'))
 *
 * @package acl
 */
-class Acl extends User
+class Auth
 {
     private $group_permissions;
     private $user_permissions;
+    private $data;
 
     /**
-    * Constructor
+    * Authorize user data
     */
-    public function __construct()
+    public function acl($user_data)
     {
-        parent::__construct();
-        $this->initialize_permissions();
-    }
+        // We only need these two
+        $data['user_id'] = $user_data['user_id'];
+        $data['group_id'] = $user_data['group_id'];
 
-    /**
-    * Initialize both group and user permissions by calling their functions
-    * Also reset their arrays for re-initialization
-    */
-    public function initialize_permissions()
-    {
         $this->group_permissions = array();
         $this->user_permissions = array();
+
         $this->init_group_permissions();
         $this->init_user_permissions();
     }

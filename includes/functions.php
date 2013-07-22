@@ -492,7 +492,7 @@ function is_admin_panel()
 
 function msg_handler($errno, $msg_text, $errfile, $errline)
 {
-    global $acl, $config, $mangareader_root_path, $user;
+    global $auth, $config, $mangareader_root_path, $user;
 
     // Do not display notices if we suppress them via @
     if (error_reporting() == 0 && $errno != E_USER_ERROR && $errno != E_USER_WARNING && $errno != E_USER_NOTICE)
@@ -575,16 +575,13 @@ function msg_handler($errno, $msg_text, $errfile, $errline)
 
 	    if (empty($user->sid))
 	    {
-		/**
-		* @todo Re-initialize user constructor
-		*/
-		session_start();
+		$user->session_begin();
 	    }
 
 	    // Re-initialize acl
-	    $acl->initialize_permissions();
+	    $auth->acl($user->data);
 
-	    if ($msg_text == 'NO_MANGA' || $msg_text == 'NO_CATEGORY')
+	    if ($msg_text == 'NO_MANGA' || $msg_text == 'NO_CATEGORY' || $msg_text == 'NOT_FOUND')
 	    {
 		send_status_line(404, 'Not Found');
 	    }
@@ -724,8 +721,9 @@ function load_module($module_group, $module_name)
 
     $module_file = $mangareader_root_path . 'includes/' . $module_group . '/' . $module_group . '_' . $mode . '.php';
 
-    if (!file_exists($module_group))
+    if (!file_exists($module_file))
     {
+	// Somehow this line gives Invalid error type specified error
 	trigger_error("$module_name module of $module_group does not exist", E_WARNING);
     }
 

@@ -40,7 +40,7 @@ require($mangareader_root_path . 'includes/class-hooks.php');
 require($mangareader_root_path . 'includes/plugin.php');
 require($mangareader_root_path . 'includes/functions-template.php');
 require($mangareader_root_path . 'includes/utf/utf_tools.php');
-require($mangareader_root_path . 'includes/class-acl.php');
+require($mangareader_root_path . 'includes/class-auth.php');
 
 set_error_handler(defined('MANGAREADER_MSG_HANDLER') ? MANGAREADER_MSG_HANDLER : 'msg_handler');
 
@@ -81,14 +81,11 @@ if (($config = $cache->get('config')) === false)
     $cache->put('config', $config);
 }
 
-/**
-* @todo add this to the msg handler
-*/
-$lang_domains = array();
-load_langdomain($mangareader_root_path . 'languages', 'default');
-
 $user = new User();
-$acl = new Acl();
+
+$lang_domains = array();
+
+$auth = new Auth();
 
 if (file_exists($mangareader_root_path . 'install') && !defined('IN_INSTALL'))
 {

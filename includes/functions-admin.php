@@ -2,13 +2,13 @@
 
 function admin_menu_list($return = false)
 {
-    global $acl, $admin_pages;
+    global $auth, $admin_pages;
 
     $output = '<ul class="nav nav-list">';
 
     foreach ($admin_pages as $slug_name => $atts)
     {
-        if ($acl->has_perm($atts['capability']))
+        if ($auth->has_perm($atts['capability']))
         {
             $page_url = generate_page_url($slug_name, false, false, true);
             $output .= '<li class="nav-header"><a href="' . $page_url . '">' . $atts['menu_title'] . '</a></li>';
@@ -16,7 +16,7 @@ function admin_menu_list($return = false)
             {
                 foreach ($atts['subpages'] as $sub_slug_name => $sub_atts)
                 {
-                    if ($acl->has_perm($sub_atts['capability']))
+                    if ($auth->has_perm($sub_atts['capability']))
                     {
                         $subpage_url = generate_page_url($slug_name, $sub_slug_name, false, true);
                         $output .= '<li><a href="' . $subpage_url . '">' . $sub_atts['menu_title'] . '</a></li>';
@@ -53,8 +53,7 @@ function generate_page_url($page, $subpage = false, $suffix = false, $return = f
 
 function load_hook($page = '', $subpage = '')
 {
-    global $admin_pages, $acl;
-
+    global $admin_pages, $auth;
 
     if ($page == '')
     {
@@ -66,13 +65,11 @@ function load_hook($page = '', $subpage = '')
     {
         if (isset($admin_pages[$page]))
         {
-            if (!$acl->has_perm($admin_pages[$page]['capability']))
+            if (!$auth->has_perm($admin_pages[$page]['capability']))
             {
                 trigger_error('PERMISSION_DENIED');
-                return false;
             }
             call_user_func($admin_pages[$page]['function']);
-            return true;
         }
         else
         {
@@ -80,7 +77,6 @@ function load_hook($page = '', $subpage = '')
             * @todo Page not found error
             */
             trigger_error('page not found');
-            return false;
         }
     }
 
@@ -88,16 +84,11 @@ function load_hook($page = '', $subpage = '')
     {
         if (isset($admin_pages[$page]['subpages'][$subpage]))
         {
-            if (!$acl->has_perm($admin_pages[$page]['subpages'][$subpage]['capability']))
+            if (!$auth->has_perm($admin_pages[$page]['subpages'][$subpage]['capability']))
             {
-                /**
-                * @todo Permission denied error
-                */
-                trigger_error('permission denied');
-                return false;
+                trigger_error('PERMISSION_DENIED');
             }
             call_user_func($admin_pages[$page]['subpages'][$subpage]['function']);
-            return true;
         }
         else
         {
@@ -105,7 +96,6 @@ function load_hook($page = '', $subpage = '')
             * @todo Page not found error
             */
             trigger_error('page not found');
-            return false;
         }
     }
 }

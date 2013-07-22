@@ -19,6 +19,10 @@ $mangareader_admin_root_path = (defined('MANGAREADER_ADMIN_ROOT_PATH')) ? MANGAR
 require($mangareader_root_path . 'common.php');
 include_once($mangareader_root_path . 'includes/functions-admin.php');
 
+$user->session_begin();
+$auth->acl($user->data);
+$user->setup();
+
 $page = request_var('page', '');
 $subpage = request_var('subpage', '');
 

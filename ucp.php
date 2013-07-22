@@ -17,10 +17,14 @@ $mangareader_root_path = (defined('MANGAREADER_ROOT_PATH')) ? MANGAREADER_ROOT_P
 include($mangareader_root_path . 'common.php');
 include_once($mangareader_root_path . 'includes/functions-user.php');
 
+$user->session_begin();
+$auth->acl($user->data);
+$user->setup();
+
 $mode = request_var('mode', '');
 $submit = (isset($_POST['submit'])) ? true : false;
 $redirect = request_var('redirect', generate_url('', ''));
-
+$error = array();
 
 switch ($mode)
 {
@@ -36,14 +40,26 @@ switch ($mode)
 
         if ($submit)
         {
-            if ($user->login($data['username'], $data['password']))
+            if (empty($data['username']))
             {
-                meta_refresh($redirect, 3);
-                trigger_error('LOGIN_SUCCESSFUL');
+                $error[] = 'LOGIN_EMPTY_USERNAME';
             }
-            else
+            if (empty($data['password']))
             {
-                $data['invalid_login'] = true;
+                $error[] = 'LOGIN_EMPTY_PASSWORD';
+            }
+
+            if (!sizeof($error))
+            {
+                if ($user->login($data['username'], $data['password']))
+                {
+                    meta_refresh($redirect, 3);
+                    trigger_error('LOGIN_SUCCESSFUL');
+                }
+                else
+                {
+                    $error[] = 'LOGIN_INVALID';
+                }
             }
         }
 
@@ -60,75 +76,7 @@ switch ($mode)
             redirect(generate_url('', '')); //redirect to home page
         }
 
-        $timezone = $config['board_timezone'];
-
-        $data = array(
-            'username'          => utf8_normalize_nfc(request_var('username', '', true)),
-            'password'          => request_var('password', '', true),
-            'password_confirm'  => request_var('password_confirm', '', true),
-            'email'             => request_var('email', ''),
-            'email_confirm'     => request_var('email_confirm', ''),
-            'tz'                => request_var('tz', (float) $timezone),
-        );
-
-        if ($submit)
-        {
-            $error = validate_data($data, array(
-                'username'  => array(
-                    array('string', false, $config['min_username_chars'], $config['max_username_chars']),
-                    array('username', ''),
-                ),
-                'password'  => array(
-                    array('string', false, $config['min_password_chars'], $config['max_password_chars']),
-                    //array('password')
-                ),
-                'password_confirm' => array('string', false, $config['min_password_chars'], $config['max_password_chars']),
-                'email'     => array(
-                    array('string', false, 6, 60),
-                    array('email')
-                ),
-                'email_confirm' => array('string', false, 6, 60),
-                'tz'    => array('num', -14, 14)
-            ));
-
-            if (!sizeof($error))
-            {
-                if ($data['password'] != $data['password_confirm'])
-                {
-                    $error[] = 'PASSWORD_MATCH_ERROR';
-                }
-
-                if ($data['email'] != $data['email_confirm'])
-                {
-                    $error[] = 'EMAIL_MATCH_ERROR';
-                }
-            }
-
-            if (!sizeof($error))
-            {
-                if ($config['activation_required'] == USER_ACTIVATION_SELF || $config['activation_required'] == USER_ACTIVATION_ADMIN)
-                {
-                    $data['group_id'] = INACTIVE_USERS;
-                }
-                else
-                {
-                    $data['group_id'] = REGISTERED_USERS;
-                }
-
-                if (user_add($data) !== false)
-                {
-                    /**
-                    * @todo registration ok
-                    */
-                }
-                else
-                {
-                    /**
-                    * @todo registration failed
-                    */
-                }
-            }
-        }
+        load_module('ucp', 'register');
 
         locate_template('user_register.php', true);
     break;

@@ -1,9 +1,15 @@
 <?php get_header(); ?>
 <?php
-if (isset($data['invalid_login'])) :
+if (sizeof($error)) :
 ?>
 <div class="alert alert-error">
-<?php _e('INVALID_LOGIN'); ?>
+<?php
+foreach ($error as $err) :
+?>
+<p><?php _e($err); ?></p>
+<?php
+endforeach;
+?>
 </div>
 <?php
 endif;

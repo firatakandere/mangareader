@@ -23,10 +23,6 @@ $lang = array(
     'REGISTER'  => 'Register',
     'LOGOUT'    => 'Logout',
     'LOGIN_SUCCESSFUL'  => 'You have logged in successfully, redirecting...', // @todo make this better
-    /**
-    * @todo Forgot password section
-    */
-    'INVALID_LOGIN' => 'Username or password is invalid.',
 
     'PERMISSION_DENIED' => 'You don\'t have permission to reach this page',
 
@@ -48,6 +44,16 @@ $lang = array(
     'TOO_SMALL_TZ'          => 'Timezone value is too small',
     'TOO_LARGE_TZ'          => 'Timezone value is too large',
     'REGISTERS_CLOSED'      => 'Registrations are currently closed',
+
+// login errors
+    'LOGIN_EMPTY_USERNAME'  => 'You cannot login without a username',
+    'LOGIN_EMPTY_PASSWORD'  => 'You cannot login without a password',
+    'LOGIN_INVALID'         => 'Invalid username or password',
+    /**
+    * @todo add forgot password section when it's done
+    */
+    'INVALID_LOGIN' => 'Username or password is invalid.',
+
 
     'CACHE_NOT_WRITABLE'    => 'Cache directory is not writable',
 
