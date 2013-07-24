@@ -34,7 +34,7 @@ class User
         global $config, $db;
 
         // Start session if has not started yet
-        if ((!isset($_SESSION) || !is_array($_SESSION) && !headers_sent()))
+        if ((!isset($_SESSION) || !is_array($_SESSION)) && !headers_sent())
         {
             session_start();
         }
