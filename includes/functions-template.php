@@ -117,8 +117,6 @@ function locate_template($template_names, $load = false, $require_once = true)
     return $located;
 }
 
-
-
 function load_template($_template_file, $require_once = true)
 {
     /**
@@ -320,5 +318,4 @@ function locate_admin_template($template_names, $load = false, $require_once = t
 
     return $located;
 }
-
 ?>

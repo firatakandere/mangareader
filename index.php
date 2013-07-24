@@ -21,5 +21,7 @@ $user->session_begin(); // Start user session
 $auth->acl($user->data); // Authorize user data
 $user->setup();  // Load language
 
+
 locate_template('index.php', true);
+
 ?>

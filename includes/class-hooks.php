@@ -58,6 +58,7 @@ class Hooks
 
 $hooking_daemon = new Hooks();
 $admin_pages = array();
+$registered_scripts = array();
 
 /**
 * Add new action to the hook

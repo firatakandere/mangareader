@@ -48,7 +48,7 @@ class Auth
     */
     public function acl($user_data)
     {
-        // We only need these two
+        // We need only these two
         $this->data['user_id'] = $user_data['user_id'];
         $this->data['group_id'] = $user_data['group_id'];
 

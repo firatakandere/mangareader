@@ -44,7 +44,7 @@ require($mangareader_root_path . 'includes/class-auth.php');
 
 set_error_handler(defined('MANGAREADER_MSG_HANDLER') ? MANGAREADER_MSG_HANDLER : 'msg_handler');
 
-// If the database port is not empty, suffix it to the database host with ':' seperator
+// If the database port is not empty, suffix it to the database host with ':' separator
 if (!empty($dbport))
 {
     $dbhost .= ':' . $dbport;
@@ -80,6 +80,12 @@ if (($config = $cache->get('config')) === false)
     }
     $cache->put('config', $config);
 }
+
+// Let's kill expired sessions first
+$expiration = time() - ((int) $config['session_span'] * 60);
+$sql = 'DELETE FROM ' . SESSIONS_TABLE . '
+        WHERE session_last_visit < ' . (int)$expiration;
+$db->query($sql);
 
 $user = new User();
 

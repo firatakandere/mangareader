@@ -145,6 +145,43 @@ function remove_submenu_page($menu_slug, $submenu_slug)
     unset($admin_pages[$menu_slug]['subpages'][$submenu_slug]);
 }
 
+/**
+* Register Javascript
+*
+* @param string $handle Name of the script. Should be unique as it is used as a handle for later use with enqueue_script()
+* @param string $source URL to the script. Avoid to use hardcoded urls
+* @param array|boolean $deps Array of the handles of all the registered scripts that this script depends on, that is the scripts that must be loaded before this script.Set false if there are no dependencies.
+* @param boolean $in_footer Normally scripts are placed in the <head> section. If this parameter is true the script is placed at the bottom of the <body>.
+*
+* @return void
+*/
+function register_script($handle, $source, $deps = false, $in_footer = false)
+{
+    global $registered_scripts;
+
+    if (isset($registered_scripts[$handle]))
+    {
+        trigger_error("Script $handle already registered. Old data will be overwritten.", E_NOTICE);
+    }
+    if (!file_exists($source))
+    {
+        trigger_error("Source file for script $handle does not exist", E_WARNING);
+    }
+
+    $registered_scripts[$handle] = array(
+        'source' => $source,
+        'deps'  => $deps,
+        'in_footer' => (bool) $in_footer
+    );
+}
+
+function enqueue_script()
+{
+    global $registered_scripts;
+
+    
+}
+
 function get_plugin_header_line($title, $content)
 {
     if (is_empty($content))

@@ -241,11 +241,11 @@ function get_browser_fingerprint()
     global $config;
     $data = '';
     $data .= get_ip();
-    $data .= $_SERVER['HTTP_USER_AGENT'];
-    $data .= $_SERVER['HTTP_ACCEPT'];
+    $data .= (isset($_SERVER['HTTP_USER_AGENT'])) ? $_SERVER['HTTP_USER_AGENT'] : '';
+    $data .= (isset($_SERVER['HTTP_ACCEPT'])) ? $_SERVER['HTTP_ACCEPT'] : '';
     $data .= $config['board_salt'];
-    $data .= $_SERVER['HTTP_ACCEPT_ENCODING'];
-    $data .= $_SERVER['HTTP_ACCEPT_LANGUAGE'];
+    $data .= (isset($_SERVER['HTTP_ACCEPT_ENCODING'])) ? $_SERVER['HTTP_ACCEPT_ENCODING'] : '';
+    $data .= (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) ? $_SERVER['HTTP_ACCEPT_LANGUAGE'] : '';
 
     return hash('sha256', $data);
 }
@@ -317,8 +317,10 @@ function page_footer()
 	/**
 	* @todo Make a better DB debugger view
 	*/
-	global $db;
+	global $db, $user;
 	print_r($db->errorInfo());
+	var_dump($user->data);
+
     }
     exit_handler();
 }
@@ -422,12 +424,7 @@ function load_langdomain($directory_path, $domain)
 
     if (isset($lang_domains[$domain]))
     {
-	if (defined('DEBUG'))
-	{
-	    /**
-	    * @todo Domain already initialized, will be overwritten error
-	    */
-	}
+	trigger_error("Language domain $domain has already been initialized. Old domain will be overwritten", E_NOTICE);
 	unset($lang_domains[$domain]);
     }
 
@@ -458,13 +455,7 @@ function load_langdomain($directory_path, $domain)
     }
     else
     {
-	if (defined('DEBUG'))
-	{
-	    /**
-	    * @todo language could not be initialized error
-	    */
-	}
-
+	trigger_error('The language file could not been initialized', E_WARNING);
 	return false;
     }
 

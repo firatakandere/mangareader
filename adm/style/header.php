@@ -20,6 +20,8 @@
   <!--[if lt IE 9]>
     <script src="<?php get_admin_template_directory_uri(); ?>/js/html5shiv.js"></script>
   <![endif]-->
+<?php mr_head(); ?>
+
 </head>
 <body>
   <div class="navbar navbar-inverse navbar-fixed-top">

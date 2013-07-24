@@ -26,6 +26,7 @@ $lang = array(
 
     'PERMISSION_DENIED' => 'You don\'t have permission to reach this page',
 
+
 // registration errors
     'TOO_SHORT_USERNAME'    => 'Username is too short',
     'TOO_LONG_USERNAME'     => 'Username is too long',
