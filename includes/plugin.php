@@ -23,7 +23,7 @@ if (!defined('IN_MANGAREADER'))
 *
 * @param string $menu_title Title for the menu
 * @param string $page_title Title for the page
-* @param string $capability Name of the required permission to reach the page
+* @param string $capability Required permission name to reach the page
 * @param string $menu_slug Unique menu slug, do not use special characters
 * @param string $function The function name which will be called when the page is loaded
 * @param int $position Position of the menu item
@@ -59,7 +59,7 @@ function add_menu_page($menu_title, $page_title, $capability, $menu_slug, $funct
 * @param string $parent_slug Slug name of parent page
 * @param string $menu_title Title for the menu
 * @param string $page_title Title for the page
-* @param string $capability Name of the required permission to reach the subpage
+* @param string $capability Required permission name to reach the subpage
 * @param string $menu_slug Unique menu slug, do not use special characters
 * @param string $function The function name which will be called when the page is loaded
 * @param int $position Position of the menu item
@@ -76,10 +76,7 @@ function add_submenu_page($parent_slug, $page_title, $menu_title, $capability, $
 
     if (!isset($admin_pages[$parent_slug]))
     {
-        if (defined('DEBUG'))
-        {
-            trigger_error("add_submenu_page: Parent slug $parent_slug does not exist.", E_WARNING);
-        }
+        trigger_error("add_submenu_page: Parent slug $parent_slug does not exist.", E_WARNING);
         return false;
     }
 
@@ -151,11 +148,10 @@ function remove_submenu_page($menu_slug, $submenu_slug)
 * @param string $handle Name of the script. Should be unique as it is used as a handle for later use with enqueue_script()
 * @param string $source URL to the script. Avoid to use hardcoded urls
 * @param array|boolean $deps Array of the handles of all the registered scripts that this script depends on, that is the scripts that must be loaded before this script.Set false if there are no dependencies.
-* @param boolean $in_footer Normally scripts are placed in the <head> section. If this parameter is true the script is placed at the bottom of the <body>.
 *
 * @return void
 */
-function register_script($handle, $source, $deps = false, $in_footer = false)
+function register_script($handle, $source, $deps = false)
 {
     global $registered_scripts;
 
@@ -163,23 +159,45 @@ function register_script($handle, $source, $deps = false, $in_footer = false)
     {
         trigger_error("Script $handle already registered. Old data will be overwritten.", E_NOTICE);
     }
-    if (!file_exists($source))
-    {
-        trigger_error("Source file for script $handle does not exist", E_WARNING);
-    }
 
     $registered_scripts[$handle] = array(
         'source' => $source,
         'deps'  => $deps,
-        'in_footer' => (bool) $in_footer
+        'enqueued'  => false
     );
 }
 
-function enqueue_script()
+function enqueue_script($handle, $in_footer = false)
 {
     global $registered_scripts;
+    static $priority = 1000;
 
-    
+    if (!isset($registered_scripts[$handle]))
+    {
+        return;
+    }
+
+    if ($registered_scripts[$handle]['deps'] !== false)
+    {
+        foreach ((array)$registered_scripts[$handle]['deps'] as $dep)
+        {
+            $priority++;
+            enqueue_script($dep, $in_footer);
+        }
+    }
+
+    if ($registered_scripts[$handle]['enqueued'])
+    {
+        $priority--;
+        return;
+    }
+
+    $where = ($in_footer) ? 'mr_footer' : 'mr_head';
+    $script_string = '<script src="' . $registered_scripts[$handle]["source"] . '"></script>' . "\n";
+    $registered_scripts[$handle]['enqueued'] = true;
+    add_action($where, create_function('', "echo '$script_string';"), $priority);
+    $priority--;
+    return;
 }
 
 function get_plugin_header_line($title, $content)
@@ -209,6 +227,12 @@ function get_plugin_header($file_path)
         }
         return false;
     }
+}
+
+add_action('mr_init', 'init_javascripts');
+function init_javascripts()
+{
+    register_script('jquery', generate_url('includes/scripts/jquery-1.10.2.min.js'));
 }
 
 ?>

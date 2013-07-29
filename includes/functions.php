@@ -317,10 +317,8 @@ function page_footer()
 	/**
 	* @todo Make a better DB debugger view
 	*/
-	global $db, $user;
-	print_r($db->errorInfo());
-	var_dump($user->data);
-
+	global $db;
+	var_dump($db->errorInfo());
     }
     exit_handler();
 }

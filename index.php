@@ -16,11 +16,9 @@ define('IN_MANGAREADER', true);
 $mangareader_root_path = (defined('MANGAREADER_ROOT_PATH')) ? MANGAREADER_ROOT_PATH : './';
 include($mangareader_root_path . 'common.php');
 
-
 $user->session_begin(); // Start user session
 $auth->acl($user->data); // Authorize user data
 $user->setup();  // Load language
-
 
 locate_template('index.php', true);
 

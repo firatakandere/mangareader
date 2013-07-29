@@ -61,6 +61,11 @@ function is_logged_in()
     return ($user->data['user_id'] != ANONYMOUS);
 }
 
+function is_rtl()
+{
+    return (__('DIRECTION') == 'rtl');
+}
+
 function get_user_data($data, $return = false)
 {
     global $user;
@@ -164,9 +169,6 @@ function get_timezonelist($selected_value = '', $return = false, $atts = array()
 
 function get_charset($return = false)
 {
-    /**
-    * @todo here
-    */
     if ($return)
     {
         return __('CHARSET');
@@ -233,20 +235,75 @@ function get_register_uri($return = false)
     echo $url;
 }
 
-function language_attributes()
+function language_attributes($doctype = 'html')
 {
-    echo '';
-    /**
-    * @todo here
-    */
+    global $user;
+    $attributes = array();
+    $output = '';
+
+    if (is_rtl())
+    {
+        $attributes[] = 'dir="rtl"';
+    }
+
+    $lang = explode('_', $user->data['language_name']);
+    $lang = $lang[0];
+
+    switch (strtolower($doctype))
+    {
+        case 'html':
+            $attributes[] = 'lang="' . $lang . '"';
+        break;
+        case 'xhtml':
+            $attributes[] = 'xml:lang="' . $lang . '"';
+        break;
+        default:
+            trigger_error("language_attributes: doctype parameter accepts only 'html' and 'xhtml'", E_NOTICE);
+        break;
+    }
+
+    $output = implode(' ', $attributes);
+    echo $output;
 }
 
-function mr_title()
+function mr_title($sep = '&raquo;', $return = false, $seplocation = 'left')
 {
-    /**
-    * @todo here
-    */
-    echo '';
+    global $domain;
+    $output = '';
+    $title = (isset($GLOBALS['TITLE'])) ? $GLOBALS['TITLE'] : '';
+
+    // Hide seperator if the title is empty.
+    // Not sure if this is a good feature(?)
+    // But only seperator without title looks strange
+    if ($title == '')
+    {
+        if ($return)
+        {
+            return '';
+        }
+        echo '';
+        return;
+    }
+
+    switch (strtolower($seplocation))
+    {
+        case 'left':
+            $output = $sep . ' ' . $title;
+        break;
+        case 'right':
+            $output = $title . ' ' . $sep;
+        break;
+        default:
+            trigger_error("mr_title: seplocation parameter accepts only 'right' and 'left'", E_NOTICE);
+        break;
+    }
+
+    if ($return)
+    {
+        return $output;
+    }
+
+    echo $output;
 }
 
 function mr_head()
@@ -258,8 +315,6 @@ function mr_footer()
 {
     do_action('mr_footer');
 }
-
-
 
 // Admin Panel Functions
 function get_admin_footer()

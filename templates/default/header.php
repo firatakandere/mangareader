@@ -21,7 +21,7 @@
 <head>
 <meta charset="<?php get_charset(); ?>">
 <meta name="viewport" content="width=device-width">
-<title><?php mr_title(); ?></title>
+<title><?php echo $config['site_title']; ?> <?php mr_title(); ?></title>
 
 <link rel="stylesheet" href="<?php get_template_directory_uri(); ?>/less/normalize.css">
 <link rel="stylesheet" href="<?php get_template_directory_uri(); ?>/less/bootstrap.css">

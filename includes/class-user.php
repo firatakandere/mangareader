@@ -41,7 +41,7 @@ class User
 
         $this->sid = session_id();
 
-        // Check if session_id already exist on database
+        // Check if session_id already exists on database
         $sql = 'SELECT session_user_id, session_fingerprint
                 FROM ' . SESSIONS_TABLE . '
                 WHERE session_id = ' . $db->quote($this->sid);
@@ -96,6 +96,9 @@ class User
         redirect($redirect);
     }
 
+    /**
+    * @todo add auto login feature
+    */
     public function login($username = '', $password = '', $auto_login = false)
     {
         global $config, $db;

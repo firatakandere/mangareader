@@ -10,8 +10,9 @@ $lang = array(
     'INFORMATION'   =>  'Information',
     'REMOVE_INSTALL_PATH'   => 'Your installation path is still available. Please delete or rename it.',
 
-// Template attributes
+// Language attributes
     'CHARSET'   => 'UTF-8',
+    'DIRECTION' => 'ltr', // left-to-right
 
 // user management section
     'EMAIL_ADDRESS' => 'Email Address',
@@ -56,7 +57,6 @@ $lang = array(
 
 
     'CACHE_NOT_WRITABLE'    => 'Cache directory is not writable',
-
 
 // search section
     'SEARCH'    => 'Search',

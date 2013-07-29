@@ -29,6 +29,9 @@ $subpage = request_var('subpage', '');
 // Prepare menu pages
 do_action('admin_menu_pages');
 
+register_script('bootstrap', get_admin_template_directory_uri(true) . '/js/bootstrap.min.js', array('jquery'));
+enqueue_script('bootstrap', true);
+
 get_admin_header();
 get_admin_sidebar();
 

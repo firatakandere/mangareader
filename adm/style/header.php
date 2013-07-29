@@ -4,7 +4,7 @@
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <meta name="description" content=""/>
-  <title>{TITLE}</title>
+  <title><?php echo $config['site_title']; ?><?php mr_title(); ?></title>
   <link rel="stylesheet" type="text/css" href="<?php get_admin_template_directory_uri(); ?>/css/bootstrap.css"/>
 
   <style type="text/css">

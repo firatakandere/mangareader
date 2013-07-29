@@ -8,6 +8,7 @@ if (!defined('IN_MANGAREADER') || !defined('IN_ADMIN'))
 }
 ?>
 <form class="form-horizontal" method="post" action="<?php get_new_category_uri(); ?>">
+    <input type="hidden" name="is_adult" value="0">
     <div class="control-group">
         <label class="control-label" for="inputCategoryName"><?php _e('CATEGORY_NAME'); ?></label>
         <div class="controls">
@@ -18,8 +19,8 @@ if (!defined('IN_MANGAREADER') || !defined('IN_ADMIN'))
         <label class="control-label" for="inputIsAdult"><?php _e('IS_ADULT'); ?></label>
         <div class="controls">
             <div class="btn-group" data-toggle="buttons-radio">
-                <button type="button" class="btn btn-primary">Yes</button>
-                <button type="button" class="btn btn-primary">No</button>
+                <button type="button" class="btn btn-primary btn-is-adult" value="1">Yes</button>
+                <button type="button" class="btn btn-primary btn-is-adult" value="0">No</button>
             </div>
         </div>
     </div>

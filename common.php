@@ -106,5 +106,8 @@ if (is_admin_panel())
         include_once($filename);
     }
 }
+do_action('mr_init');
+
+// Initialize plugins here
 
 ?>

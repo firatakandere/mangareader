@@ -32,6 +32,16 @@ function default_category()
 
 function default_add_category()
 {
+    $js_script = <<<EOD
+<script>
+$(\'.btn-is-adult\').bind(\'click\', function(){
+    $(\'input[name="is_adult"]\').val(this.value);
+});
+</script>
+
+EOD;
+    add_action('mr_footer', create_function('', "echo '$js_script';"));
+
     global $mangareader_admin_root_path;
     include_once($mangareader_admin_root_path . 'hooks/category_styles/new_category.php');
 }
