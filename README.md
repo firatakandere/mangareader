@@ -1,3 +1,7 @@
+Update (January 26, 2014): After a guy, called Sam got in touch and offered me to help with html&css, I decided to keep development. nginx support will be announced soon!
+I made a simple mindmap via mind42, [check it out](http://mind42.com/public/719531ec-5a13-43a6-8d00-62dc9394ecb9)
+Have any ideas? [Issue it!](https://github.com/firatakandere/mangareader/issues) or [Mail me!](mailto:f.akandere@gmail.com)
+
 ## ABOUT
 MangaReader is a free high-level manga reading board written in PHP.
 
@@ -15,6 +19,7 @@ Please let me know your must-have features!
 - PHP5
 - PDO database driver with supported database
 - I'll try to make both Windows and \*nix based systems supported
+- Apache mod_rewrite or nginx configuration file edit
 
 
 ## LICENSE
