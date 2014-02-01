@@ -369,6 +369,24 @@ function get_group_name($group_id, $return = false)
             $group_name = __('ADMINISTRATORS');
             break;
     }
+
+    // Database fetch will be used for other properties of groups (like groups color etc.)
+    $sql = 'SELECT *
+            FROM ' . GROUPS_TABLE . '
+            WHERE group_id = ' . (int) $group_id;
+    $row = $db->query($sql)->fetch();
+
+    if (!isset($group_name))
+    {
+        $group_name = $row['group_name'];
+    }
+
+    if ($return)
+    {
+        return $group_name;
+    }
+
+    echo $group_name;
 }
 
 function locate_admin_template($template_names, $load = false, $require_once = true)
