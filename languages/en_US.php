@@ -108,7 +108,14 @@ $lang = array(
 		'14'	=> '[UTC + 14] Line Island Time',
 	),
 
-// default categories hook
+    // Pre-defined Groups Names
+    'INACTIVE_USERS'    => 'Inactive users',
+    'REGISTERED_USERS'  => 'Registered users',
+    'GUESTS'            => 'Guests',
+    'GLOBAL_MODERATORS' => 'Global moderators',
+    'ADMINISTRATORS'    => 'Administrators',
+
+    // default categories hook
     'CATEGORIES'    => 'Categories',
     'NEW_CATEGORY'  => 'Add Category',
     'CATEGORY_NAME' => 'Category Name',

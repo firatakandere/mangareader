@@ -28,6 +28,8 @@ define('USER_ACTIVATION_ADMIN', 2);
 define('INACTIVE_USERS', 1);
 define('REGISTERED_USERS', 2);
 define('GUESTS', 3);
+define('GLOBAL_MODERATORS', 4);
+define('ADMINISTRATORS', 5);
 
 // Database Tables
 define('CATEGORIES_TABLE', $dbprefix . 'categories');

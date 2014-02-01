@@ -268,7 +268,6 @@ function language_attributes($doctype = 'html')
 
 function mr_title($sep = '&raquo;', $return = false, $seplocation = 'left')
 {
-    global $domain;
     $output = '';
     $title = (isset($GLOBALS['TITLE'])) ? $GLOBALS['TITLE'] : '';
 
@@ -344,6 +343,32 @@ function get_admin_template_directory_uri($return = false)
         return $uri;
     }
     echo $uri;
+}
+
+function get_group_name($group_id, $return = false)
+{
+    global $db;
+
+    // First check if it's pre-defined group
+
+    switch ($group_id)
+    {
+        case INACTIVE_USERS:
+            $group_name = __('INACTIVE_USERS');
+            break;
+        case REGISTERED_USERS:
+            $group_name = __('REGISTERED_USERS');
+            break;
+        case GUESTS:
+            $group_name = __('GUESTS');
+            break;
+        case GLOBAL_MODERATORS:
+            $group_name = __('GLOBAL_MODERATORS');
+            break;
+        case ADMINISTRATORS:
+            $group_name = __('ADMINISTRATORS');
+            break;
+    }
 }
 
 function locate_admin_template($template_names, $load = false, $require_once = true)
