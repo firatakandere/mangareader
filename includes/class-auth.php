@@ -62,7 +62,7 @@ class Auth
     public function has_perm($perm_name)
     {
         $group_p = (isset($this->group_permissions[$perm_name])) ? (int) $this->group_permissions[$perm_name] : false;
-        $user_p  = (isset($this->user_permissions[$perm_name])) ? (int) $this->user->permissions[$perm_name] : false;
+        $user_p  = (isset($this->user_permissions[$perm_name])) ? (int) $this->user_permissions[$perm_name] : false;
 
         // If one of them is 0 (never), return false
         if ($group_p === 0 || $user_p === 0)
